@@ -21,4 +21,25 @@ class GameMaster {
             else -> players.add(player)
         }
     }
+
+    fun start() {
+        logger.i(LOG_TAG, "starting game")
+        makeSureInitialStateIsLegal()
+        // TODO
+    }
+
+    private fun makeSureInitialStateIsLegal() {
+        when {
+            players.size < 2 -> {
+                throw IllegalStateException("Should register at least two players before starting the game")
+            }
+            else -> {
+                logger.v(LOG_TAG, "initial state is legal")
+            }
+        }
+    }
+
+    companion object {
+        private val LOG_TAG = GameMaster::class.java.simpleName
+    }
 }
