@@ -6,7 +6,7 @@ group 'com.neogineer'
 version '0.0.1'
 
 repositories {
-    mavenCentral()
+    jcenter()
 }
 
 dependencies {
