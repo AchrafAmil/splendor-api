@@ -11,5 +11,5 @@ sealed class Transaction {
 
     data class CardReservation(
         val cardId: Int
-    )
+    ) : Transaction()
 }

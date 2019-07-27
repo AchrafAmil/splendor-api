@@ -1,14 +1,15 @@
 package com.neogineer.splendor.api
 
 import com.neogineer.splendor.api.data.Board
+import com.neogineer.splendor.api.data.IllegalTransactionException
 import com.neogineer.splendor.api.data.NameAlreadyTakenException
 import com.neogineer.splendor.api.data.PlayerState
 import com.neogineer.splendor.api.data.ResourceLoader
+import com.neogineer.splendor.api.data.Transaction
 import com.neogineer.splendor.api.data.mapToAllColors
 import com.neogineer.splendor.api.data.mapToColorMap
 import com.neogineer.splendor.api.utils.Logger
 import com.neogineer.splendor.api.utils.PrintLogger
-import java.lang.IllegalStateException
 
 class GameMaster {
 
@@ -43,11 +44,19 @@ class GameMaster {
         initializeBoard()
 
         players.forEach { (player, playerState) ->
+            val boardState = board.state
             val transaction = player.playTurn(
                 players.values.minus(playerState),
                 playerState,
-                board.state
+                boardState
             )
+            if (transaction is Transaction.TokensExchange) {
+                if (boardState.playerCanSubmitTransaction(playerState, transaction)) {
+                    // TODO
+                } else {
+                    throw IllegalTransactionException("$transaction is not valid or board/player can't afford it")
+                }
+            }
             // TODO
         }
         // TODO
