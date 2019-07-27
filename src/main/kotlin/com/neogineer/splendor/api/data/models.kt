@@ -14,7 +14,10 @@ data class Board(
     val tokens: MutableMap<Color, Int>,
     val nobles: MutableSet<Noble>,
     var gold: Int
-)
+) {
+    val state: BoardState
+        get() = BoardState(cards, tokens, nobles, gold)
+}
 
 data class Noble(
     val id: Int,

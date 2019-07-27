@@ -18,6 +18,8 @@ fun mapToColorMap(
     )
 }
 
+fun mapToAllColors(color: Int) = mapToColorMap(color, color, color, color, color)
+
 fun mapToCardCategory(categoryCode: Int): CardCategory {
     return when (categoryCode) {
         0 -> CardCategory.FIRST

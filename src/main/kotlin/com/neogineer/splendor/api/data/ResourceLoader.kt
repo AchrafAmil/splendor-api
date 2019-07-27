@@ -2,11 +2,12 @@ package com.neogineer.splendor.api.data
 
 class ResourceLoader {
 
-    fun loadCards(): List<Card> {
+    fun loadCards(): Set<Card> {
         val text = javaClass.getResource("/cards/cards.txt").readText()
         val cardsTextLines = text
             .split("\n")
             .filter { it.contains(',') && !it.contains('#') }
+
         return cardsTextLines
             .map { cardTextLine ->
                 val cardParts = cardTextLine.split(',').map { it.trim() }
@@ -24,13 +25,15 @@ class ResourceLoader {
                     points = cardParts[8].toInt()
                 )
             }
+            .toSet()
     }
 
-    fun loadNobles(): List<Noble> {
+    fun loadNobles(): Set<Noble> {
         val text = javaClass.getResource("/cards/nobles.txt").readText()
         val noblesTextLines = text
             .split("\n")
             .filter { it.contains(',') && !it.contains('#') }
+
         return noblesTextLines
             .map { nobleTextLine ->
                 val nobleParts = nobleTextLine.split(',').map { it.trim() }
@@ -46,5 +49,6 @@ class ResourceLoader {
                     points = nobleParts[6].toInt()
                 )
             }
+            .toSet()
     }
 }

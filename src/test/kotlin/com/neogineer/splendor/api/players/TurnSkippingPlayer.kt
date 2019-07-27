@@ -5,13 +5,13 @@ import com.neogineer.splendor.api.data.BoardState
 import com.neogineer.splendor.api.data.PlayerState
 import com.neogineer.splendor.api.data.Transaction
 
-class DummyPlayer(dummyPlayerName: String) : Player("DummyPlayer named $dummyPlayerName") {
+class TurnSkippingPlayer(dummyPlayerName: String) : Player("TurnSkippingPlayer named $dummyPlayerName") {
 
     override fun playTurn(
         opponentsStates: List<PlayerState>,
         selfState: PlayerState,
         boardState: BoardState
     ): Transaction {
-        TODO("not implemented")
+        return Transaction.TokensExchange(emptyMap())
     }
 }

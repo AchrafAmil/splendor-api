@@ -1,27 +1,50 @@
 package com.neogineer.splendor.api
 
-import com.neogineer.splendor.api.data.CardCategory
-import com.neogineer.splendor.api.data.ResourceLoader
+import com.neogineer.splendor.api.data.BoardState
+import com.neogineer.splendor.api.data.Color
+import com.neogineer.splendor.api.players.TurnSkippingPlayer
+import com.nhaarman.mockitokotlin2.any
+import com.nhaarman.mockitokotlin2.capture
+import com.nhaarman.mockitokotlin2.mock
+import com.nhaarman.mockitokotlin2.verify
+import com.nhaarman.mockitokotlin2.whenever
 import org.junit.Assert
 import org.junit.Test
+import org.mockito.ArgumentCaptor
 
 class InitialStateTest {
 
     @Test
-    fun `loaded cards size should be 90 = 40 + 30 + 20`() {
-        val cards = ResourceLoader().loadCards()
-        val cardsByCategory = cards.groupBy { it.category }
-
-        Assert.assertEquals(90, cards.size)
-        Assert.assertEquals(40, cardsByCategory[CardCategory.FIRST]?.size)
-        Assert.assertEquals(30, cardsByCategory[CardCategory.SECOND]?.size)
-        Assert.assertEquals(20, cardsByCategory[CardCategory.THIRD]?.size)
+    fun `initial state for 2 players should provide 4 tokens by color`() {
+        testTokensCountByPlayersCount(2, 4)
     }
 
     @Test
-    fun `loaded nobles size should be 10`() {
-        val nobles = ResourceLoader().loadNobles()
+    fun `initial state for 3 players should provide 5 tokens by color`() {
+        testTokensCountByPlayersCount(3, 5)
+    }
 
-        Assert.assertEquals(10, nobles.size)
+    @Test
+    fun `initial state for 4 players should provide 7 tokens by color`() {
+        testTokensCountByPlayersCount(4, 7)
+    }
+
+    private fun testTokensCountByPlayersCount(playersCount: Int, expectedTokensCount: Int) {
+        val gameMaster = GameMaster()
+        val boardStateCaptor = ArgumentCaptor.forClass(BoardState::class.java)
+        val player: Player = mock()
+        whenever(player.name).thenReturn("player1")
+        gameMaster.registerPlayer(player)
+        gameMaster.registerPlayer(TurnSkippingPlayer("dummy player2"))
+        if (playersCount > 2) gameMaster.registerPlayer(TurnSkippingPlayer("dummy player3"))
+        if (playersCount > 3) gameMaster.registerPlayer(TurnSkippingPlayer("dummy player4"))
+
+        gameMaster.start()
+        verify(player).playTurn(any(), any(), boardState = capture<BoardState>(boardStateCaptor))
+        val initialBoardState = boardStateCaptor.value
+
+        Color.values().forEach { color ->
+            Assert.assertEquals(expectedTokensCount, initialBoardState.tokens[color])
+        }
     }
 }
