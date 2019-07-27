@@ -41,6 +41,6 @@ data class PlayerState(
             .plus(nobles.sumBy { it.points })
 }
 
-enum class Color { BLACK, WHITE, BLUE, RED, GREEN }
+enum class Color { WHITE, BLUE, GREEN, RED, BLACK }
 
 enum class CardCategory { FIRST, SECOND, THIRD }
