@@ -1,6 +1,7 @@
 package com.neogineer.splendor.api
 
 import com.neogineer.splendor.api.data.BoardState
+import com.neogineer.splendor.api.data.CardCategory
 import com.neogineer.splendor.api.data.Color
 import com.neogineer.splendor.api.players.TurnSkippingPlayer
 import com.nhaarman.mockitokotlin2.any
@@ -30,6 +31,30 @@ class InitialStateTest {
     }
 
     private fun testTokensCountByPlayersCount(playersCount: Int, expectedTokensCount: Int) {
+        val initialBoardState = getInitialState(playersCount)
+
+        Color.values().forEach { color ->
+            Assert.assertEquals(expectedTokensCount, initialBoardState.tokens[color])
+        }
+    }
+
+    @Test
+    fun `initial state for 4 players should provide 4 cards by card category`() {
+        val initialBoardState = getInitialState(4)
+
+        CardCategory.values().forEach { cardCategory ->
+            Assert.assertEquals(4, initialBoardState.cards[cardCategory]?.size)
+        }
+    }
+
+    @Test
+    fun `initial state for 2 players should provide 3 nobles`() {
+        val initialBoardState = getInitialState(2)
+
+        Assert.assertEquals(3, initialBoardState.nobles.size)
+    }
+
+    private fun getInitialState(playersCount: Int): BoardState {
         val gameMaster = GameMaster()
         val boardStateCaptor = ArgumentCaptor.forClass(BoardState::class.java)
         val player: Player = mock()
@@ -41,10 +66,6 @@ class InitialStateTest {
 
         gameMaster.start()
         verify(player).playTurn(any(), any(), boardState = capture<BoardState>(boardStateCaptor))
-        val initialBoardState = boardStateCaptor.value
-
-        Color.values().forEach { color ->
-            Assert.assertEquals(expectedTokensCount, initialBoardState.tokens[color])
-        }
+        return boardStateCaptor.value
     }
 }

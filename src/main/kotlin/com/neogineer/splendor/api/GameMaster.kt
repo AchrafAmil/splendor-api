@@ -1,6 +1,8 @@
 package com.neogineer.splendor.api
 
 import com.neogineer.splendor.api.data.Board
+import com.neogineer.splendor.api.data.Card
+import com.neogineer.splendor.api.data.CardCategory
 import com.neogineer.splendor.api.data.IllegalTransactionException
 import com.neogineer.splendor.api.data.NameAlreadyTakenException
 import com.neogineer.splendor.api.data.PlayerState
@@ -10,6 +12,8 @@ import com.neogineer.splendor.api.data.mapToAllColors
 import com.neogineer.splendor.api.data.mapToColorMap
 import com.neogineer.splendor.api.utils.Logger
 import com.neogineer.splendor.api.utils.PrintLogger
+import com.neogineer.splendor.api.utils.draw
+import kotlin.math.min
 
 class GameMaster {
 
@@ -17,6 +21,7 @@ class GameMaster {
 
     private val players = mutableMapOf<Player, PlayerState>()
 
+    private lateinit var cardsPiles: Map<CardCategory, MutableSet<Card>>
     private lateinit var board: Board
 
     fun registerPlayer(player: Player) {
@@ -75,8 +80,10 @@ class GameMaster {
 
     private fun initializeBoard() {
         val resourceLoader = ResourceLoader()
-        val cards = resourceLoader.loadCards()
-        val nobles = resourceLoader.loadNobles()
+        val cards = resourceLoader.loadCards().shuffled()
+        val nobles = resourceLoader.loadNobles().shuffled()
+
+
         val tokensByColor = when (players.size) {
             2 -> 4
             3 -> 5
@@ -84,12 +91,28 @@ class GameMaster {
             else -> throw IllegalStateException()
         }
 
+        cardsPiles = cards.groupBy { it.category }.mapValues { it.value.toMutableSet() }
         board = Board(
-            cards = cards.groupBy { it.category }.mapValues { it.value.toSet() }.toMutableMap(),
+            cards = CardCategory.values().map { it to mutableSetOf<Card>() }.toMap(),
             tokens = mapToAllColors(tokensByColor).toMutableMap(),
-            nobles = nobles.toMutableSet(),
+            nobles = nobles.take(players.size + 1).toMutableSet(),
             gold = 5
         )
+
+        drawMissingCards()
+    }
+
+    private fun drawMissingCards() {
+        CardCategory.values().forEach { category ->
+            val categoryPile = cardsPiles.getValue(category)
+            val categoryRevealedCards = board.cards.getValue(category)
+            val missingCardsCount = 4 - categoryRevealedCards.size
+            if (missingCardsCount > 0) {
+                categoryRevealedCards.addAll(
+                    categoryPile.draw(min(categoryPile.size, missingCardsCount))
+                )
+            }
+        }
     }
 
     companion object {

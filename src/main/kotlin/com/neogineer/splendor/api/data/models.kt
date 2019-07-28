@@ -10,7 +10,7 @@ data class Card(
 )
 
 data class Board(
-    val cards: MutableMap<CardCategory, Set<Card>>,
+    val cards: Map<CardCategory, MutableSet<Card>>,
     val tokens: MutableMap<Color, Int>,
     val nobles: MutableSet<Noble>,
     var gold: Int
