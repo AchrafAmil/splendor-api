@@ -3,6 +3,7 @@ package com.neogineer.splendor.api
 import com.neogineer.splendor.api.data.BoardState
 import com.neogineer.splendor.api.data.PlayerState
 import com.neogineer.splendor.api.data.Transaction
+import kotlin.math.max
 
 fun Transaction.TokensExchange.isValid(): Boolean {
     val strictlyPositiveValuesCount = tokens.values.count { it > 0 }
@@ -18,23 +19,58 @@ fun Transaction.TokensExchange.isValid(): Boolean {
 
 fun BoardState.playerCanSubmitTransaction(
     playerState: PlayerState,
-    transaction: Transaction.TokensExchange
+    transaction: Transaction
 ): Boolean {
-    if (!transaction.isValid()) return false
+    when (transaction) {
+        is Transaction.CardBuying -> {
+            // make sure :
+            // - board or user reservations contain this card,
+            // - user can afford it.
 
-    // make sure:
-    // - board has enough tokens to offer,
-    // - player has enough tokens to return,
-    // - and '2 tokens from same color' transactions are on colors with at least 4 available tokens.
-    transaction.tokens.forEach { (color, transactionColorTokensCount) ->
-        val boardColorTokensCount = this.tokens[color] ?: 0
-        val playerColorTokensCount = playerState.tokens[color] ?: 0
-        if (
-            boardColorTokensCount - transactionColorTokensCount < 0
-            || playerColorTokensCount + transactionColorTokensCount < 0
-            || transactionColorTokensCount == 2 && boardColorTokensCount < 4
-        ) {
-            return false
+            val card = cards
+                .values
+                .flatten()
+                .plus(playerState.reservedCards)
+                .firstOrNull { it.id == transaction.cardId }
+                ?: return false
+            val costGap = card
+                .cost
+                .map { (color, cost) -> max(0, cost - (playerState.tokens[color] ?: 0)) }
+                .sum()
+
+            if (costGap > playerState.golds) return false
+        }
+        is Transaction.CardReservation -> {
+            // make sure :
+            // - board does contain this card,
+            // - user has less than 3 reserved cards.
+
+            val boardDoesNotContainCard = cards.values.flatten().none { it.id == transaction.cardId }
+            val userHasThreeOrMoreReservedCards = playerState.reservedCards.size >= 3
+
+            if (boardDoesNotContainCard || userHasThreeOrMoreReservedCards) return false
+        }
+        is Transaction.TokensExchange -> {
+            if (!transaction.isValid()) return false
+
+            // make sure:
+            // - board has enough tokens to offer,
+            // - player has enough tokens to return,
+            // - and '2 tokens from same color' transactions are on colors with at least 4 available tokens.
+            transaction.tokens.forEach { (color, transactionColorTokensCount) ->
+                val boardColorTokensCount = this.tokens[color] ?: 0
+                val playerColorTokensCount = playerState.tokens[color] ?: 0
+                val boardHasEnoughTokens = boardColorTokensCount - transactionColorTokensCount >= 0
+                val playerHasEnoughTokens = playerColorTokensCount + transactionColorTokensCount >= 0
+                val isTwoTokensFromColorWithLessThanFour = transactionColorTokensCount == 2 && boardColorTokensCount < 4
+
+                if (!boardHasEnoughTokens || !playerHasEnoughTokens || isTwoTokensFromColorWithLessThanFour) {
+                    return false
+                }
+            }
+
+            // Plus, make sure player's won't have more than 10 tokens after transaction
+            if (transaction.tokens.values.sum() + playerState.tokens.values.sum() > 10) return false
         }
     }
 

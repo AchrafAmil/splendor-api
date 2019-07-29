@@ -36,6 +36,7 @@ data class PlayerState(
     val name: String,
     val tokens: Map<Color, Int>,
     val cards: Set<Card>,
+    val reservedCards: Set<Card>,
     val nobles: Set<Noble>,
     val golds: Int
 ) {

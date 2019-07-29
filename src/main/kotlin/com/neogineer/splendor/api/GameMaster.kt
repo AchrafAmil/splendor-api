@@ -7,7 +7,6 @@ import com.neogineer.splendor.api.data.IllegalTransactionException
 import com.neogineer.splendor.api.data.NameAlreadyTakenException
 import com.neogineer.splendor.api.data.PlayerState
 import com.neogineer.splendor.api.data.ResourceLoader
-import com.neogineer.splendor.api.data.Transaction
 import com.neogineer.splendor.api.data.mapToAllColors
 import com.neogineer.splendor.api.data.mapToColorMap
 import com.neogineer.splendor.api.utils.Logger
@@ -33,11 +32,12 @@ class GameMaster {
                 throw NameAlreadyTakenException("there's already a player named ${player.name}")
             else -> {
                 players[player] = PlayerState(
-                    player.name,
-                    mapToColorMap(),
-                    emptySet(),
-                    emptySet(),
-                    0
+                    name = player.name,
+                    tokens = mapToColorMap(),
+                    cards = emptySet(),
+                    reservedCards = emptySet(),
+                    nobles = emptySet(),
+                    golds = 0
                 )
             }
         }
@@ -55,12 +55,10 @@ class GameMaster {
                 playerState,
                 boardState
             )
-            if (transaction is Transaction.TokensExchange) {
-                if (boardState.playerCanSubmitTransaction(playerState, transaction)) {
-                    // TODO
-                } else {
-                    throw IllegalTransactionException("$transaction is not valid or board/player can't afford it")
-                }
+            if (boardState.playerCanSubmitTransaction(playerState, transaction)) {
+                // TODO
+            } else {
+                throw IllegalTransactionException("$transaction is not valid or board/player can't afford it")
             }
             // TODO
         }
