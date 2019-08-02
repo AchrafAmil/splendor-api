@@ -3,6 +3,8 @@ package com.neogineer.splendor.api
 import com.neogineer.splendor.api.data.BoardState
 import com.neogineer.splendor.api.data.CardCategory
 import com.neogineer.splendor.api.data.Color
+import com.neogineer.splendor.api.data.Transaction
+import com.neogineer.splendor.api.data.mapToColorMap
 import com.neogineer.splendor.api.players.TurnSkippingPlayer
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.capture
@@ -59,6 +61,7 @@ class InitialStateTest {
         val boardStateCaptor = ArgumentCaptor.forClass(BoardState::class.java)
         val player: Player = mock()
         whenever(player.name).thenReturn("player1")
+        whenever(player.playTurn(any(), any(), any())).thenReturn(Transaction.TokensExchange(mapToColorMap()))
         gameMaster.registerPlayer(player)
         gameMaster.registerPlayer(TurnSkippingPlayer("dummy player2"))
         if (playersCount > 2) gameMaster.registerPlayer(TurnSkippingPlayer("dummy player3"))
