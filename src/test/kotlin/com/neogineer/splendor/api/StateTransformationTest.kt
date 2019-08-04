@@ -1,6 +1,7 @@
 package com.neogineer.splendor.api
 
 import com.neogineer.splendor.api.data.BoardState
+import com.neogineer.splendor.api.data.Color
 import com.neogineer.splendor.api.data.PlayerState
 import com.neogineer.splendor.api.data.Transaction
 import com.neogineer.splendor.api.players.TokenCollectorPlayer
@@ -36,6 +37,27 @@ class StateTransformationTest {
         }
     }
 
+    @Test
+    fun `after transformation all tokens in the game should sum up to 7 by color`() {
+        val statesByTurn = getFullGameStates(
+            Transaction.TokensExchange(TOKENS_TO_COLLECT),
+            listOf(TokenCollectorPlayer("player2"), TokenCollectorPlayer("player3"), TurnSkippingPlayer("player4"))
+        )
+
+        statesByTurn.forEach { (boardState, playersStates) ->
+            Color.values().forEach { color ->
+                val colorTokensCount =
+                    boardState.tokens.getOrDefault(color, 0) + playersStates.sumBy { it.tokens.getOrDefault(color, 0) }
+                Assert.assertEquals(7, colorTokensCount)
+            }
+        }
+    }
+
+    /**
+     * return type is not converted to map in order to preserve,
+     * in a very unlikely case (yet possible), duplicate keys.
+     *
+     */
     private fun getFullGameStates(
         mockedPlayerTransaction: Transaction,
         opponents: List<Player>
