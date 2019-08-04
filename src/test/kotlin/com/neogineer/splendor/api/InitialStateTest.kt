@@ -7,7 +7,9 @@ import com.neogineer.splendor.api.data.Transaction
 import com.neogineer.splendor.api.data.mapToColorMap
 import com.neogineer.splendor.api.players.TurnSkippingPlayer
 import com.nhaarman.mockitokotlin2.any
+import com.nhaarman.mockitokotlin2.atLeastOnce
 import com.nhaarman.mockitokotlin2.capture
+import com.nhaarman.mockitokotlin2.firstValue
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
@@ -68,7 +70,7 @@ class InitialStateTest {
         if (playersCount > 3) gameMaster.registerPlayer(TurnSkippingPlayer("dummy player4"))
 
         gameMaster.start()
-        verify(player).playTurn(any(), any(), boardState = capture<BoardState>(boardStateCaptor))
-        return boardStateCaptor.value
+        verify(player, atLeastOnce()).playTurn(any(), any(), boardState = capture<BoardState>(boardStateCaptor))
+        return boardStateCaptor.firstValue
     }
 }

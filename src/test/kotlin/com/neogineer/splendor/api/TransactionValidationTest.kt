@@ -2,10 +2,11 @@ package com.neogineer.splendor.api
 
 import com.neogineer.splendor.api.data.Transaction
 import com.neogineer.splendor.api.data.mapToColorMap
+import com.neogineer.splendor.api.rules.isValid
 import org.junit.Assert
 import org.junit.Test
 
-class RulesTest {
+class TransactionValidationTest {
 
     @Test
     fun `TokensExchange#isValid() for valid transactions should return true`() {

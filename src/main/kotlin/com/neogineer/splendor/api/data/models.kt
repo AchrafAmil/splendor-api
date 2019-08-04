@@ -16,7 +16,7 @@ data class Board(
     var gold: Int
 ) {
     val state: BoardState
-        get() = BoardState(cards, tokens, nobles, gold)
+        get() = BoardState(cards.toMap(), tokens.toMap(), nobles.toSet(), gold)
 }
 
 data class Noble(

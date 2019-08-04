@@ -1,7 +1,5 @@
 package com.neogineer.splendor.api.data
 
-import java.lang.IllegalArgumentException
-
 fun mapToColorMap(
     white: Int = 0,
     blue: Int = 0,
@@ -16,6 +14,7 @@ fun mapToColorMap(
         Color.RED to red,
         Color.BLACK to black
     )
+        .filter { it.value != 0 }
 }
 
 fun mapToAllColors(color: Int) = mapToColorMap(color, color, color, color, color)

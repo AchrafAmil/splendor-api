@@ -1,4 +1,4 @@
-package com.neogineer.splendor.api
+package com.neogineer.splendor.api.rules
 
 import com.neogineer.splendor.api.data.BoardState
 import com.neogineer.splendor.api.data.PlayerState

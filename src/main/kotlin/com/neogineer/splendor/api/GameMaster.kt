@@ -3,12 +3,12 @@ package com.neogineer.splendor.api
 import com.neogineer.splendor.api.data.Board
 import com.neogineer.splendor.api.data.Card
 import com.neogineer.splendor.api.data.CardCategory
-import com.neogineer.splendor.api.data.IllegalTransactionException
 import com.neogineer.splendor.api.data.NameAlreadyTakenException
 import com.neogineer.splendor.api.data.PlayerState
 import com.neogineer.splendor.api.data.ResourceLoader
 import com.neogineer.splendor.api.data.mapToAllColors
 import com.neogineer.splendor.api.data.mapToColorMap
+import com.neogineer.splendor.api.rules.commit
 import com.neogineer.splendor.api.utils.Logger
 import com.neogineer.splendor.api.utils.PrintLogger
 import com.neogineer.splendor.api.utils.draw
@@ -48,19 +48,20 @@ class GameMaster {
         makeSureInitialStateIsLegal()
         initializeBoard()
 
-        players.forEach { (player, playerState) ->
-            val boardState = board.state
-            val transaction = player.playTurn(
-                players.values.minus(playerState),
-                playerState,
-                boardState
-            )
-            if (boardState.playerCanSubmitTransaction(playerState, transaction)) {
+        repeat(2) {
+            players.forEach { (player, playerState) ->
+                val boardState = board.state
+                val transaction = player.playTurn(
+                    players.values.minus(playerState),
+                    playerState,
+                    boardState
+                )
+                val newPlayerState = board.commit(playerState, transaction)
+                players[player] = newPlayerState
+                drawMissingCards()
+
                 // TODO
-            } else {
-                throw IllegalTransactionException("$transaction is not valid or board/player can't afford it")
             }
-            // TODO
         }
         // TODO
     }
