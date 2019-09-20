@@ -33,9 +33,14 @@ fun BoardState.playerCanSubmitTransaction(
                 .plus(playerState.reservedCards)
                 .firstOrNull { it.id == transaction.cardId }
                 ?: return false
+
             val costGap = card
                 .cost
-                .map { (color, cost) -> max(0, cost - (playerState.tokens[color] ?: 0)) }
+                .map { (color, cardCost) ->
+                    val cardsOfSameColorCount = playerState.cards.count { it.color == color }
+                    val tokensOfSameColorCount = playerState.tokens[color] ?: 0
+                    max(0, cardCost - tokensOfSameColorCount - cardsOfSameColorCount)
+                }
                 .sum()
 
             if (costGap > playerState.golds) return false
