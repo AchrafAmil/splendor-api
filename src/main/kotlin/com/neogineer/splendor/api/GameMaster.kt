@@ -1,6 +1,7 @@
 package com.neogineer.splendor.api
 
 import com.neogineer.splendor.api.data.Board
+import com.neogineer.splendor.api.data.BoardState
 import com.neogineer.splendor.api.data.Card
 import com.neogineer.splendor.api.data.CardCategory
 import com.neogineer.splendor.api.data.NameAlreadyTakenException
@@ -22,6 +23,11 @@ class GameMaster {
 
     private lateinit var cardsPiles: Map<CardCategory, MutableSet<Card>>
     private lateinit var board: Board
+
+    private val winner: PlayerState?
+        get() = players.values
+            .filter { it.points >= WINNING_POINTS_THRESHOLD }
+            .maxBy { it.points }
 
     fun registerPlayer(player: Player) {
         logger.i(LOG_TAG, "registering player: ${player.name}")
@@ -48,22 +54,41 @@ class GameMaster {
         makeSureInitialStateIsLegal()
         initializeBoard()
 
-        repeat(2) {
+        var turnNumber = 0
+        while (winner == null) {
+            logger.v(LOG_TAG, "--- turn N°${turnNumber++}")
             players.forEach { (player, playerState) ->
                 val boardState = board.state
+                logState(boardState, playerState)
+
                 val transaction = player.playTurn(
                     players.values.minus(playerState),
                     playerState,
                     boardState
                 )
+
                 val newPlayerState = board.commit(playerState, transaction)
                 players[player] = newPlayerState
                 drawMissingCards()
-
-                // TODO
             }
         }
-        // TODO
+
+        logger.i(LOG_TAG, "*******  WINNER IS : ${winner!!}")
+    }
+
+    private fun logState(
+        boardState: BoardState,
+        playerState: PlayerState
+    ) {
+        logger.v(LOG_TAG, "board first category cards: ${boardState.cards[CardCategory.FIRST]}")
+        logger.v(LOG_TAG, "board tokens: ${boardState.tokens}")
+        logger.v(LOG_TAG, "player state: $playerState")
+        logger.v(LOG_TAG, "player points: ${playerState.points}")
+        logger.v(LOG_TAG, "player cards: ${playerState.cards.size}")
+        logger.v(
+            LOG_TAG,
+            "board + piles cards: ${boardState.cards.values.plus(cardsPiles.values).flatten().size}"
+        )
     }
 
     private fun makeSureInitialStateIsLegal() {
@@ -81,7 +106,6 @@ class GameMaster {
         val resourceLoader = ResourceLoader()
         val cards = resourceLoader.loadCards().shuffled()
         val nobles = resourceLoader.loadNobles().shuffled()
-
 
         val tokensByColor = when (players.size) {
             2 -> 4
@@ -116,5 +140,6 @@ class GameMaster {
 
     companion object {
         private val LOG_TAG = GameMaster::class.java.simpleName
+        private const val WINNING_POINTS_THRESHOLD = 15
     }
 }
