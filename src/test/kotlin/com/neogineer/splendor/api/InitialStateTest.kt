@@ -5,6 +5,7 @@ import com.neogineer.splendor.api.data.CardCategory
 import com.neogineer.splendor.api.data.Color
 import com.neogineer.splendor.api.data.Transaction
 import com.neogineer.splendor.api.data.mapToColorMap
+import com.neogineer.splendor.api.players.BasicPlayer
 import com.neogineer.splendor.api.players.TurnSkippingPlayer
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.atLeastOnce
@@ -65,7 +66,7 @@ class InitialStateTest {
         whenever(player.name).thenReturn("player1")
         whenever(player.playTurn(any(), any(), any())).thenReturn(Transaction.TokensExchange(mapToColorMap()))
         gameMaster.registerPlayer(player)
-        gameMaster.registerPlayer(TurnSkippingPlayer("dummy player2"))
+        gameMaster.registerPlayer(BasicPlayer("dummy player2"))
         if (playersCount > 2) gameMaster.registerPlayer(TurnSkippingPlayer("dummy player3"))
         if (playersCount > 3) gameMaster.registerPlayer(TurnSkippingPlayer("dummy player4"))
 

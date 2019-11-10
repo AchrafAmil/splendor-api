@@ -2,17 +2,12 @@ package com.neogineer.splendor.api
 
 import com.neogineer.splendor.api.data.BoardState
 import com.neogineer.splendor.api.data.Color
+import com.neogineer.splendor.api.data.IllegalTransactionException
 import com.neogineer.splendor.api.data.PlayerState
 import com.neogineer.splendor.api.data.Transaction
 import com.neogineer.splendor.api.players.TokenCollectorPlayer
 import com.neogineer.splendor.api.players.TokenCollectorPlayer.Companion.TOKENS_TO_COLLECT
 import com.neogineer.splendor.api.players.TurnSkippingPlayer
-import com.nhaarman.mockitokotlin2.any
-import com.nhaarman.mockitokotlin2.argumentCaptor
-import com.nhaarman.mockitokotlin2.atLeastOnce
-import com.nhaarman.mockitokotlin2.mock
-import com.nhaarman.mockitokotlin2.verify
-import com.nhaarman.mockitokotlin2.whenever
 import org.junit.Assert
 import org.junit.Test
 
@@ -20,16 +15,21 @@ class StateTransformationTest {
 
     @Test
     fun `player should keep tokens he collected in previous turns`() {
+        val firstPlayer = TokenCollectorPlayer("player1")
         val statesByTurn = getFullGameStates(
-            Transaction.TokensExchange(TOKENS_TO_COLLECT),
-            listOf(TokenCollectorPlayer("player2"), TokenCollectorPlayer("player3"), TurnSkippingPlayer("player4"))
+            listOf(
+                firstPlayer,
+                TurnSkippingPlayer("player2"),
+                TurnSkippingPlayer("player3"),
+                TurnSkippingPlayer("player4")
+            )
         )
 
-        val mockedPlayerStates = statesByTurn
-            .map { (_, playersStates) -> playersStates.first { it.name == MOCKED_PLAYER_NAME } }
+        val player1States = statesByTurn
+            .mapNotNull { (_, playersStates) -> playersStates.firstOrNull() { it.name == firstPlayer.name } }
 
-        val firstState = mockedPlayerStates[0]
-        val secondState = mockedPlayerStates[1]
+        val firstState = player1States[0]
+        val secondState = player1States[1]
 
         secondState.tokens.forEach { (color, count) ->
             val expected = (firstState.tokens[color] ?: 0) + (if (color in TOKENS_TO_COLLECT.keys) 1 else 0)
@@ -40,8 +40,12 @@ class StateTransformationTest {
     @Test
     fun `after transformation all tokens in the game should sum up to 7 by color`() {
         val statesByTurn = getFullGameStates(
-            Transaction.TokensExchange(TOKENS_TO_COLLECT),
-            listOf(TokenCollectorPlayer("player2"), TokenCollectorPlayer("player3"), TurnSkippingPlayer("player4"))
+            listOf(
+                TokenCollectorPlayer("player1"),
+                TokenCollectorPlayer("player2"),
+                TurnSkippingPlayer("player3"),
+                TurnSkippingPlayer("player4")
+            )
         )
 
         statesByTurn.forEach { (boardState, playersStates) ->
@@ -58,42 +62,30 @@ class StateTransformationTest {
      * in a very unlikely case (yet possible), duplicate keys.
      *
      */
-    private fun getFullGameStates(
-        mockedPlayerTransaction: Transaction,
-        opponents: List<Player>
-    ): List<Pair<BoardState, List<PlayerState>>> {
+    private fun getFullGameStates(players: List<Player>): List<Pair<BoardState, List<PlayerState>>> {
         val gameMaster = GameMaster()
-        val boardStateCaptor = argumentCaptor<BoardState>()
-        val playerStateCaptor = argumentCaptor<PlayerState>()
-        val opponentsStatesCaptor = argumentCaptor<List<PlayerState>>()
-        val player: Player = mock()
-        whenever(player.name).thenReturn(MOCKED_PLAYER_NAME)
-        whenever(player.playTurn(any(), any(), any()))
-            .thenReturn(mockedPlayerTransaction)
-        gameMaster.registerPlayer(player)
-        opponents.forEach { gameMaster.registerPlayer(it) }
+        players.forEach { gameMaster.registerPlayer(it) }
+        val boardStates = mutableListOf<Pair<BoardState, List<PlayerState>>>()
 
-        gameMaster.start()
-        verify(player, atLeastOnce()).playTurn(
-            opponentsStatesCaptor.capture(),
-            playerStateCaptor.capture(),
-            boardState = boardStateCaptor.capture()
-        )
-        val boardStates = boardStateCaptor.allValues
-        val playerStates = playerStateCaptor.allValues
-        val playersStatesByTurn = opponentsStatesCaptor
-            .allValues
-            .mapIndexed { turnIndex, opponentsStates ->
-                listOf(playerStates[turnIndex]) + opponentsStates
+        val callback = object : GameCallbackAdapter() {
+            override fun onPlayerSubmittedTransaction(
+                playerState: PlayerState,
+                otherPlayersStates: List<PlayerState>,
+                boardState: BoardState,
+                transaction: Transaction
+            ) {
+                if (playerState.name == players.first().name) {
+                    boardStates.add(boardState to otherPlayersStates.plus(playerState))
+                }
             }
+        }
+
+        try {
+            gameMaster.start(callback)
+        } catch (ite: IllegalTransactionException) {
+            // no-op: players are not smart to avoid IllegalTransactionException
+        }
 
         return boardStates
-            .mapIndexed { turnIndex, boardState ->
-                boardState to playersStatesByTurn[turnIndex]
-            }
-    }
-
-    companion object {
-        private const val MOCKED_PLAYER_NAME = "mocked player1"
     }
 }

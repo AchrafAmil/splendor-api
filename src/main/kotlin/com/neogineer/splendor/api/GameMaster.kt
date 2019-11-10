@@ -7,6 +7,7 @@ import com.neogineer.splendor.api.data.CardCategory
 import com.neogineer.splendor.api.data.NameAlreadyTakenException
 import com.neogineer.splendor.api.data.PlayerState
 import com.neogineer.splendor.api.data.ResourceLoader
+import com.neogineer.splendor.api.data.TooManyTurnsException
 import com.neogineer.splendor.api.data.mapToAllColors
 import com.neogineer.splendor.api.data.mapToColorMap
 import com.neogineer.splendor.api.rules.commit
@@ -16,6 +17,8 @@ import com.neogineer.splendor.api.utils.draw
 import kotlin.math.min
 
 class GameMaster {
+
+    val turnsCountLimit = 1000
 
     private val logger: Logger = PrintLogger()
 
@@ -49,31 +52,44 @@ class GameMaster {
         }
     }
 
-    fun start() {
+    fun start(gameCallback: GameCallback = GameCallbackAdapter()) {
         logger.i(LOG_TAG, "starting game")
         makeSureInitialStateIsLegal()
         initializeBoard()
+        gameCallback.onGameStarted(board.state)
 
         var turnNumber = 0
         while (winner == null) {
-            logger.v(LOG_TAG, "--- turn N°${turnNumber++}")
-            players.forEach { (player, playerState) ->
-                val boardState = board.state
-                logState(boardState, playerState)
-
-                val transaction = player.playTurn(
-                    players.values.minus(playerState),
-                    playerState,
-                    boardState
-                )
-
-                val newPlayerState = board.commit(playerState, transaction)
-                players[player] = newPlayerState
-                drawMissingCards()
-            }
+            onNewTurn(turnNumber, gameCallback)
+            turnNumber++
         }
 
+        gameCallback.onGameFinished(winner!!, players.values.toList(), board.state)
         logger.i(LOG_TAG, "*******  WINNER IS : ${winner!!}")
+    }
+
+    private fun onNewTurn(turnNumber: Int, gameCallback: GameCallback) {
+        logger.v(LOG_TAG, "--- turn N°$turnNumber")
+        gameCallback.onNewTurn(turnNumber)
+        if (turnNumber > turnsCountLimit) {
+            throw TooManyTurnsException("Exceeded the maximum number of turns. Infinite game loop?")
+        }
+
+        players.forEach { (player, playerState) ->
+            val boardState = board.state
+            logState(boardState, playerState)
+            val opponentsStates = players.values.minus(playerState)
+            val transaction = player.playTurn(
+                opponentsStates,
+                playerState,
+                boardState
+            )
+            gameCallback.onPlayerSubmittedTransaction(playerState, opponentsStates, boardState, transaction)
+
+            val newPlayerState = board.commit(playerState, transaction)
+            players[player] = newPlayerState
+            drawMissingCards()
+        }
     }
 
     private fun logState(
