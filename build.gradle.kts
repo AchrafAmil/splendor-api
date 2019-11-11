@@ -7,7 +7,7 @@ plugins {
     id("org.jetbrains.dokka") version "0.10.0"
 }
 
-group = "com.neogineer"
+group = "com.github.achrafamil"
 version = "0.1.0-SNAPSHOT"
 
 repositories {
