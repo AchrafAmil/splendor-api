@@ -6,25 +6,6 @@ import com.neogineer.splendor.api.data.PlayerState
 import com.neogineer.splendor.api.data.Transaction
 import com.neogineer.splendor.api.data.mapToAllColors
 
-fun aPlayerWhoAlwaysDoes(
-    name: String = "Anonymous player",
-    turnImplementation: (
-        opponentsStates: List<PlayerState>,
-        selfState: PlayerState,
-        boardState: BoardState
-    ) -> Transaction
-): Player {
-    return object : Player(name) {
-        override fun playTurn(
-            opponentsStates: List<PlayerState>,
-            selfState: PlayerState,
-            boardState: BoardState
-        ): Transaction {
-            return turnImplementation(opponentsStates, selfState, boardState)
-        }
-    }
-}
-
 fun aPlayerWhoDoesOnlyOnce(
     name: String = "Anonymous one turn player",
     turnImplementation: (
@@ -42,9 +23,10 @@ fun aPlayerWhoDoesOnlyOnce(
         ): Transaction {
             return if (firstTurn) {
                 turnImplementation(opponentsStates, selfState, boardState)
+                    .also { firstTurn = false }
             } else {
                 Transaction.TokensExchange(mapToAllColors(0))
-            }.also { firstTurn = false }
+            }
         }
     }
 }
