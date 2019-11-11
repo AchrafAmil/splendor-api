@@ -2,6 +2,7 @@ package com.neogineer.splendor.api.players
 
 import com.neogineer.splendor.api.Player
 import com.neogineer.splendor.api.data.BoardState
+import com.neogineer.splendor.api.data.Noble
 import com.neogineer.splendor.api.data.PlayerState
 import com.neogineer.splendor.api.data.Transaction
 import com.neogineer.splendor.api.data.mapToAllColors
@@ -28,5 +29,12 @@ fun aPlayerWhoDoesOnlyOnce(
                 Transaction.TokensExchange(mapToAllColors(0))
             }
         }
+
+        override fun chooseNoble(
+            affordableNobles: List<Noble>,
+            opponentsStates: List<PlayerState>,
+            selfState: PlayerState,
+            boardState: BoardState
+        ) = affordableNobles.first()
     }
 }

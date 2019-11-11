@@ -2,6 +2,7 @@ package com.neogineer.splendor.api.players
 
 import com.neogineer.splendor.api.Player
 import com.neogineer.splendor.api.data.BoardState
+import com.neogineer.splendor.api.data.Noble
 import com.neogineer.splendor.api.data.PlayerState
 import com.neogineer.splendor.api.data.Transaction
 
@@ -14,4 +15,11 @@ class TurnSkippingPlayer(dummyPlayerName: String) : Player("TurnSkippingPlayer n
     ): Transaction {
         return Transaction.TokensExchange(emptyMap())
     }
+
+    override fun chooseNoble(
+        affordableNobles: List<Noble>,
+        opponentsStates: List<PlayerState>,
+        selfState: PlayerState,
+        boardState: BoardState
+    ) = affordableNobles.first()
 }

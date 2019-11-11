@@ -1,6 +1,7 @@
 package com.neogineer.splendor.api.rules
 
 import com.neogineer.splendor.api.data.BoardState
+import com.neogineer.splendor.api.data.Noble
 import com.neogineer.splendor.api.data.PlayerState
 import com.neogineer.splendor.api.data.Transaction
 import kotlin.math.max
@@ -80,6 +81,13 @@ fun BoardState.playerCanSubmitTransaction(
     }
 
     return true
+}
+
+fun PlayerState.canAffordNoble(noble: Noble): Boolean {
+    return noble.cost.all { (color, cardsNeededCount) ->
+        val playerCardsOfTheSameColor = this.cards.filter { card -> card.color == color }
+        playerCardsOfTheSameColor.size >= cardsNeededCount
+    }
 }
 
 const val TOKENS_LIMIT_BY_PLAYER = 10

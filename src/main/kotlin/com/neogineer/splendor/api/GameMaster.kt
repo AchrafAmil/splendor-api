@@ -5,11 +5,13 @@ import com.neogineer.splendor.api.data.BoardState
 import com.neogineer.splendor.api.data.Card
 import com.neogineer.splendor.api.data.CardCategory
 import com.neogineer.splendor.api.data.NameAlreadyTakenException
+import com.neogineer.splendor.api.data.Noble
 import com.neogineer.splendor.api.data.PlayerState
 import com.neogineer.splendor.api.data.ResourceLoader
 import com.neogineer.splendor.api.data.TooManyTurnsException
 import com.neogineer.splendor.api.data.mapToAllColors
 import com.neogineer.splendor.api.data.mapToColorMap
+import com.neogineer.splendor.api.rules.canAffordNoble
 import com.neogineer.splendor.api.rules.commit
 import com.neogineer.splendor.api.utils.Logger
 import com.neogineer.splendor.api.utils.PrintLogger
@@ -89,6 +91,24 @@ class GameMaster {
             val newPlayerState = board.commit(playerState, transaction)
             players[player] = newPlayerState
             drawMissingCards()
+
+            val affordableNobles = board.nobles.filter { newPlayerState.canAffordNoble(it) }
+            if (affordableNobles.isNotEmpty()) {
+                val chosenNoble = player.chooseNoble(affordableNobles, opponentsStates, newPlayerState, board.state)
+
+                assignNobleToPlayer(chosenNoble, player)
+            }
+        }
+    }
+
+    private fun assignNobleToPlayer(noble: Noble, player: Player) {
+        logger.i(LOG_TAG, "assigning noble ($noble) to player ${player.name}")
+        if (board.nobles.remove(noble)) {
+            val playerState = players[player]!!
+            val newPlayerState = playerState.copy(nobles = playerState.nobles.plus(noble))
+            players[player] = newPlayerState
+        } else {
+            throw IllegalStateException("Noble $noble not found in board ${board.nobles}")
         }
     }
 

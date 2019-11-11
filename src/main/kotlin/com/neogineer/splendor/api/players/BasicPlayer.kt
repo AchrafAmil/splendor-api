@@ -3,6 +3,7 @@ package com.neogineer.splendor.api.players
 import com.neogineer.splendor.api.Player
 import com.neogineer.splendor.api.data.BoardState
 import com.neogineer.splendor.api.data.Color
+import com.neogineer.splendor.api.data.Noble
 import com.neogineer.splendor.api.data.PlayerState
 import com.neogineer.splendor.api.data.Transaction
 import com.neogineer.splendor.api.rules.TOKENS_LIMIT_BY_PLAYER
@@ -99,4 +100,11 @@ class BasicPlayer(playerName: String) : Player("BasicPlayer $playerName") {
                 boardState.playerCanSubmitTransaction(selfState, Transaction.CardBuying(card.id))
             }?.id
     }
+
+    override fun chooseNoble(
+        affordableNobles: List<Noble>,
+        opponentsStates: List<PlayerState>,
+        selfState: PlayerState,
+        boardState: BoardState
+    ) = affordableNobles.first()
 }

@@ -47,8 +47,6 @@ fun Board.commit(playerState: PlayerState, transaction: Transaction): PlayerStat
                     this.tokens[color] = this.tokens.getOrDefault(color, 0) + cost
                 }
 
-                // TODO check if should give player a noble
-
                 playerState.copy(
                     cards = playerState.cards + card,
                     tokens = playerTokensAfterTransaction
