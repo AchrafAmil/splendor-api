@@ -74,10 +74,12 @@ fun BoardState.playerCanSubmitTransaction(
                 }
             }
 
-            // Plus, make sure player's won't have more than 10 tokens after transaction
-            if (transaction.tokens.values.sum() + playerState.tokens.values.sum() > 10) return false
+            // Plus, make sure player's won't have more than $TOKENS_LIMIT_BY_PLAYER tokens after transaction
+            if (transaction.tokens.values.sum() + playerState.tokens.values.sum() > TOKENS_LIMIT_BY_PLAYER) return false
         }
     }
 
     return true
 }
+
+const val TOKENS_LIMIT_BY_PLAYER = 10

@@ -101,10 +101,7 @@ class GameMaster {
         logger.v(LOG_TAG, "player state: $playerState")
         logger.v(LOG_TAG, "player points: ${playerState.points}")
         logger.v(LOG_TAG, "player cards: ${playerState.cards.size}")
-        logger.v(
-            LOG_TAG,
-            "board + piles cards: ${boardState.cards.values.plus(cardsPiles.values).flatten().size}"
-        )
+        logger.v(LOG_TAG, "board + piles cards: ${boardState.cards.values.plus(cardsPiles.values).flatten().size}")
     }
 
     private fun makeSureInitialStateIsLegal() {
@@ -145,7 +142,7 @@ class GameMaster {
         CardCategory.values().forEach { category ->
             val categoryPile = cardsPiles.getValue(category)
             val categoryRevealedCards = board.cards.getValue(category)
-            val missingCardsCount = 4 - categoryRevealedCards.size
+            val missingCardsCount = MAX_VISIBLE_CARDS_PER_CATEGORY - categoryRevealedCards.size
             if (missingCardsCount > 0) {
                 categoryRevealedCards.addAll(
                     categoryPile.draw(min(categoryPile.size, missingCardsCount))
@@ -157,5 +154,6 @@ class GameMaster {
     companion object {
         private val LOG_TAG = GameMaster::class.java.simpleName
         private const val WINNING_POINTS_THRESHOLD = 15
+        private const val MAX_VISIBLE_CARDS_PER_CATEGORY = 4
     }
 }

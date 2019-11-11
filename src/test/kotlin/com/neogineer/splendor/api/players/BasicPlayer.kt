@@ -5,6 +5,7 @@ import com.neogineer.splendor.api.data.BoardState
 import com.neogineer.splendor.api.data.Color
 import com.neogineer.splendor.api.data.PlayerState
 import com.neogineer.splendor.api.data.Transaction
+import com.neogineer.splendor.api.rules.TOKENS_LIMIT_BY_PLAYER
 import com.neogineer.splendor.api.rules.playerCanSubmitTransaction
 import kotlin.math.max
 import kotlin.random.Random
@@ -81,7 +82,7 @@ class BasicPlayer(playerName: String) : Player("BasicPlayer $playerName") {
             .toList()
             .sortedBy { (_, interest) -> interest }
             .filter { (color, _) -> selfState.tokens.getOrDefault(color, 0) > 0 }
-            .take(max(0, selfState.tokens.values.sum() + mapOfColorsToTake.size - 10))
+            .take(max(0, selfState.tokens.values.sum() + mapOfColorsToTake.size - TOKENS_LIMIT_BY_PLAYER))
             .map { it.first }
             .map { color -> color to -1 }.toMap()
 
