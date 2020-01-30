@@ -1,21 +1,21 @@
-package com.neogineer.splendor.api
+package com.github.achrafamil.splendor.api
 
-import com.neogineer.splendor.api.data.Board
-import com.neogineer.splendor.api.data.BoardState
-import com.neogineer.splendor.api.data.Card
-import com.neogineer.splendor.api.data.CardCategory
-import com.neogineer.splendor.api.data.NameAlreadyTakenException
-import com.neogineer.splendor.api.data.Noble
-import com.neogineer.splendor.api.data.PlayerState
-import com.neogineer.splendor.api.data.ResourceLoader
-import com.neogineer.splendor.api.data.TooManyTurnsException
-import com.neogineer.splendor.api.data.mapToAllColors
-import com.neogineer.splendor.api.data.mapToColorMap
-import com.neogineer.splendor.api.rules.canAffordNoble
-import com.neogineer.splendor.api.rules.commit
-import com.neogineer.splendor.api.utils.Logger
-import com.neogineer.splendor.api.utils.PrintLogger
-import com.neogineer.splendor.api.utils.draw
+import com.github.achrafamil.splendor.api.data.Board
+import com.github.achrafamil.splendor.api.data.BoardState
+import com.github.achrafamil.splendor.api.data.Card
+import com.github.achrafamil.splendor.api.data.CardCategory
+import com.github.achrafamil.splendor.api.data.NameAlreadyTakenException
+import com.github.achrafamil.splendor.api.data.Noble
+import com.github.achrafamil.splendor.api.data.PlayerState
+import com.github.achrafamil.splendor.api.data.ResourceLoader
+import com.github.achrafamil.splendor.api.data.TooManyTurnsException
+import com.github.achrafamil.splendor.api.data.mapToAllColors
+import com.github.achrafamil.splendor.api.data.mapToColorMap
+import com.github.achrafamil.splendor.api.rules.canAffordNoble
+import com.github.achrafamil.splendor.api.rules.commit
+import com.github.achrafamil.splendor.api.utils.Logger
+import com.github.achrafamil.splendor.api.utils.PrintLogger
+import com.github.achrafamil.splendor.api.utils.draw
 import kotlin.math.min
 
 class GameMaster {

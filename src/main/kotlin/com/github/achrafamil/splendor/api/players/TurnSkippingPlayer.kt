@@ -1,10 +1,10 @@
-package com.neogineer.splendor.api.players
+package com.github.achrafamil.splendor.api.players
 
-import com.neogineer.splendor.api.Player
-import com.neogineer.splendor.api.data.BoardState
-import com.neogineer.splendor.api.data.Noble
-import com.neogineer.splendor.api.data.PlayerState
-import com.neogineer.splendor.api.data.Transaction
+import com.github.achrafamil.splendor.api.Player
+import com.github.achrafamil.splendor.api.data.BoardState
+import com.github.achrafamil.splendor.api.data.Noble
+import com.github.achrafamil.splendor.api.data.PlayerState
+import com.github.achrafamil.splendor.api.data.Transaction
 
 class TurnSkippingPlayer(dummyPlayerName: String) : Player("TurnSkippingPlayer named $dummyPlayerName") {
 

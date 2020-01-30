@@ -1,11 +1,11 @@
-package com.neogineer.splendor.api.players
+package com.github.achrafamil.splendor.api.players
 
-import com.neogineer.splendor.api.Player
-import com.neogineer.splendor.api.data.BoardState
-import com.neogineer.splendor.api.data.Noble
-import com.neogineer.splendor.api.data.PlayerState
-import com.neogineer.splendor.api.data.Transaction
-import com.neogineer.splendor.api.data.mapToAllColors
+import com.github.achrafamil.splendor.api.Player
+import com.github.achrafamil.splendor.api.data.BoardState
+import com.github.achrafamil.splendor.api.data.Noble
+import com.github.achrafamil.splendor.api.data.PlayerState
+import com.github.achrafamil.splendor.api.data.Transaction
+import com.github.achrafamil.splendor.api.data.mapToAllColors
 
 fun aPlayerWhoDoesOnlyOnce(
     name: String = "Anonymous one turn player",

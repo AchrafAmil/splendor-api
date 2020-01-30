@@ -1,4 +1,4 @@
-package com.neogineer.splendor.api.data
+package com.github.achrafamil.splendor.api.data
 
 class ResourceLoader {
 
