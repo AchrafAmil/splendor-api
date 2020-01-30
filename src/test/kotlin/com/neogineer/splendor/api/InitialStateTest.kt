@@ -1,12 +1,12 @@
-package com.neogineer.splendor.api
+package com.github.achrafamil.splendor.api
 
-import com.neogineer.splendor.api.data.BoardState
-import com.neogineer.splendor.api.data.CardCategory
-import com.neogineer.splendor.api.data.Color
-import com.neogineer.splendor.api.data.Transaction
-import com.neogineer.splendor.api.data.mapToColorMap
-import com.neogineer.splendor.api.players.BasicPlayer
-import com.neogineer.splendor.api.players.TurnSkippingPlayer
+import com.github.achrafamil.splendor.api.data.BoardState
+import com.github.achrafamil.splendor.api.data.CardCategory
+import com.github.achrafamil.splendor.api.data.Color
+import com.github.achrafamil.splendor.api.data.Transaction
+import com.github.achrafamil.splendor.api.data.mapToColorMap
+import com.github.achrafamil.splendor.api.players.BasicPlayer
+import com.github.achrafamil.splendor.api.players.TurnSkippingPlayer
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.atLeastOnce
 import com.nhaarman.mockitokotlin2.capture

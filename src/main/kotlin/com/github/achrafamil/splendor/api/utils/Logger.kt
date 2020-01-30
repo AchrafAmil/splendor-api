@@ -1,4 +1,4 @@
-package com.neogineer.splendor.api.utils
+package com.github.achrafamil.splendor.api.utils
 
 
 interface Logger {
