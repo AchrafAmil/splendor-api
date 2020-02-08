@@ -15,7 +15,7 @@ import kotlin.math.max
  * Commits transaction to board, and returns the new playerState.
  *
  */
-fun Board.commit(playerState: PlayerState, transaction: Transaction): PlayerState {
+internal fun Board.commit(playerState: PlayerState, transaction: Transaction): PlayerState {
     if (!state.playerCanSubmitTransaction(playerState, transaction)) {
         throw IllegalTransactionException(
             "$transaction is not valid or board/player can't afford it\n" +

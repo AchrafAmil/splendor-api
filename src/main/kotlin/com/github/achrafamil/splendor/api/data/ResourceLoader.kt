@@ -1,7 +1,6 @@
 package com.github.achrafamil.splendor.api.data
 
-class ResourceLoader {
-
+internal class ResourceLoader {
     fun loadCards(): Set<Card> {
         val text = javaClass.getResource("/cards/cards.txt").readText()
         val cardsTextLines = text

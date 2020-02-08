@@ -18,6 +18,12 @@ import com.github.achrafamil.splendor.api.utils.PrintLogger
 import com.github.achrafamil.splendor.api.utils.draw
 import kotlin.math.min
 
+/**
+ * Main class to play a game.
+ * 1 - create an instance of GameMaster;
+ * 2 - register your own implementation (or one of the ready-to-use implementations at .api.players.*);
+ * 3 - call start method with a callback. Its methods will be triggered as game progresses.
+ */
 class GameMaster {
 
     val turnsCountLimit = 1000
@@ -34,6 +40,9 @@ class GameMaster {
             .filter { it.points >= WINNING_POINTS_THRESHOLD }
             .maxBy { it.points }
 
+    /**
+     * register your own implementation (or one of the ready-to-use implementations at .api.players.*)
+     */
     fun registerPlayer(player: Player) {
         logger.i(LOG_TAG, "registering player: ${player.name}")
         when {
@@ -54,6 +63,12 @@ class GameMaster {
         }
     }
 
+    /**
+     * start the game.
+     * Keep in mind this call is sync and method will not return until game ends.
+     * Callback (if any) methods will be triggered as game progresses.
+     * Make sure your register at least 2 and up to 4 players before calling start.
+     */
     fun start(gameCallback: GameCallback = GameCallbackAdapter()) {
         logger.i(LOG_TAG, "starting game")
         makeSureInitialStateIsLegal()
