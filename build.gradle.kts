@@ -9,7 +9,7 @@ plugins {
 }
 
 group = "com.github.achrafamil"
-version = "0.1.1"
+version = "0.1.2"
 
 val sourceSets: SourceSetContainer by project
 
