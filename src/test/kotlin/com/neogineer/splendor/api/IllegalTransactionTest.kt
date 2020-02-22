@@ -1,12 +1,12 @@
-package com.neogineer.splendor.api
+package com.github.achrafamil.splendor.api
 
-import com.neogineer.splendor.api.data.CardCategory
-import com.neogineer.splendor.api.data.IllegalTransactionException
-import com.neogineer.splendor.api.data.Transaction
-import com.neogineer.splendor.api.data.mapToColorMap
-import com.neogineer.splendor.api.players.TokenCollectorPlayer
-import com.neogineer.splendor.api.players.TurnSkippingPlayer
-import com.neogineer.splendor.api.players.aPlayerWhoDoesOnlyOnce
+import com.github.achrafamil.splendor.api.data.CardCategory
+import com.github.achrafamil.splendor.api.data.IllegalTransactionException
+import com.github.achrafamil.splendor.api.data.Transaction
+import com.github.achrafamil.splendor.api.data.mapToColorMap
+import com.github.achrafamil.splendor.api.players.TokenCollectorPlayer
+import com.github.achrafamil.splendor.api.players.TurnSkippingPlayer
+import com.github.achrafamil.splendor.api.players.aPlayerWhoDoesOnlyOnce
 import org.junit.Test
 
 class IllegalTransactionTest {

@@ -1,11 +1,15 @@
-package com.neogineer.splendor.api.rules
+package com.github.achrafamil.splendor.api.rules
 
-import com.neogineer.splendor.api.data.BoardState
-import com.neogineer.splendor.api.data.Noble
-import com.neogineer.splendor.api.data.PlayerState
-import com.neogineer.splendor.api.data.Transaction
+import com.github.achrafamil.splendor.api.data.BoardState
+import com.github.achrafamil.splendor.api.data.Noble
+import com.github.achrafamil.splendor.api.data.PlayerState
+import com.github.achrafamil.splendor.api.data.Transaction
 import kotlin.math.max
 
+/**
+ * @return true if [this] token exchange transaction is either
+ * "up to 3 tokens from different colors" or "two tokens from same color".
+ */
 fun Transaction.TokensExchange.isValid(): Boolean {
     val strictlyPositiveValuesCount = tokens.values.count { it > 0 }
 
@@ -18,6 +22,11 @@ fun Transaction.TokensExchange.isValid(): Boolean {
     return (tokens.values.none { it == 2 } || strictlyPositiveValuesCount <= 1)
 }
 
+/**
+ * @return true if transaction does respect all the rules (valid, affordable, etc).
+ *
+ * Check the official Splendor Game rules online.
+ */
 fun BoardState.playerCanSubmitTransaction(
     playerState: PlayerState,
     transaction: Transaction

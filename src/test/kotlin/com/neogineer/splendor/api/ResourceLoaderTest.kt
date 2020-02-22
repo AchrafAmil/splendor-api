@@ -1,7 +1,7 @@
-package com.neogineer.splendor.api
+package com.github.achrafamil.splendor.api
 
-import com.neogineer.splendor.api.data.CardCategory
-import com.neogineer.splendor.api.data.ResourceLoader
+import com.github.achrafamil.splendor.api.data.CardCategory
+import com.github.achrafamil.splendor.api.data.ResourceLoader
 import org.junit.Assert
 import org.junit.Test
 

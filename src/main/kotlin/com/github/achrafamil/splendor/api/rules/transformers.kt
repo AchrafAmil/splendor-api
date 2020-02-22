@@ -1,13 +1,13 @@
-package com.neogineer.splendor.api.rules
+package com.github.achrafamil.splendor.api.rules
 
-import com.neogineer.splendor.api.data.Board
-import com.neogineer.splendor.api.data.Card
-import com.neogineer.splendor.api.data.IllegalTransactionException
-import com.neogineer.splendor.api.data.PlayerState
-import com.neogineer.splendor.api.data.Transaction
-import com.neogineer.splendor.api.utils.PrintLogger
-import com.neogineer.splendor.api.utils.mergeWith
-import com.neogineer.splendor.api.utils.remove
+import com.github.achrafamil.splendor.api.data.Board
+import com.github.achrafamil.splendor.api.data.Card
+import com.github.achrafamil.splendor.api.data.IllegalTransactionException
+import com.github.achrafamil.splendor.api.data.PlayerState
+import com.github.achrafamil.splendor.api.data.Transaction
+import com.github.achrafamil.splendor.api.utils.PrintLogger
+import com.github.achrafamil.splendor.api.utils.mergeWith
+import com.github.achrafamil.splendor.api.utils.remove
 import kotlin.math.max
 
 /**
@@ -15,7 +15,7 @@ import kotlin.math.max
  * Commits transaction to board, and returns the new playerState.
  *
  */
-fun Board.commit(playerState: PlayerState, transaction: Transaction): PlayerState {
+internal fun Board.commit(playerState: PlayerState, transaction: Transaction): PlayerState {
     if (!state.playerCanSubmitTransaction(playerState, transaction)) {
         throw IllegalTransactionException(
             "$transaction is not valid or board/player can't afford it\n" +

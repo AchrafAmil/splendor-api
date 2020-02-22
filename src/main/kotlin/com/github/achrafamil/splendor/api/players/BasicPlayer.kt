@@ -1,13 +1,13 @@
-package com.neogineer.splendor.api.players
+package com.github.achrafamil.splendor.api.players
 
-import com.neogineer.splendor.api.Player
-import com.neogineer.splendor.api.data.BoardState
-import com.neogineer.splendor.api.data.Color
-import com.neogineer.splendor.api.data.Noble
-import com.neogineer.splendor.api.data.PlayerState
-import com.neogineer.splendor.api.data.Transaction
-import com.neogineer.splendor.api.rules.TOKENS_LIMIT_BY_PLAYER
-import com.neogineer.splendor.api.rules.playerCanSubmitTransaction
+import com.github.achrafamil.splendor.api.Player
+import com.github.achrafamil.splendor.api.data.BoardState
+import com.github.achrafamil.splendor.api.data.Color
+import com.github.achrafamil.splendor.api.data.Noble
+import com.github.achrafamil.splendor.api.data.PlayerState
+import com.github.achrafamil.splendor.api.data.Transaction
+import com.github.achrafamil.splendor.api.rules.TOKENS_LIMIT_BY_PLAYER
+import com.github.achrafamil.splendor.api.rules.playerCanSubmitTransaction
 import kotlin.math.max
 import kotlin.random.Random
 
