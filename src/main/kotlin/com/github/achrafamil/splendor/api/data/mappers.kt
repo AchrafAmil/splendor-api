@@ -1,5 +1,8 @@
-package com.neogineer.splendor.api.data
+package com.github.achrafamil.splendor.api.data
 
+/**
+ * utility method to get map of the 5 colors with zero as key of unspecified colors.
+ */
 fun mapToColorMap(
     white: Int = 0,
     blue: Int = 0,
@@ -17,9 +20,12 @@ fun mapToColorMap(
         .filter { it.value != 0 }
 }
 
+/**
+ * utility method to create a map of colors with [color] as value for each of the 5 colors
+ */
 fun mapToAllColors(color: Int) = mapToColorMap(color, color, color, color, color)
 
-fun mapToCardCategory(categoryCode: Int): CardCategory {
+internal fun mapToCardCategory(categoryCode: Int): CardCategory {
     return when (categoryCode) {
         0 -> CardCategory.FIRST
         1 -> CardCategory.SECOND
@@ -28,7 +34,7 @@ fun mapToCardCategory(categoryCode: Int): CardCategory {
     }
 }
 
-fun mapToColor(colorString: String): Color {
+internal fun mapToColor(colorString: String): Color {
     return when (colorString.toUpperCase()) {
         "WHITE" -> Color.WHITE
         "BLUE" -> Color.BLUE

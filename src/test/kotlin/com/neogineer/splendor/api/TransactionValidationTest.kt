@@ -1,8 +1,8 @@
-package com.neogineer.splendor.api
+package com.github.achrafamil.splendor.api
 
-import com.neogineer.splendor.api.data.Transaction
-import com.neogineer.splendor.api.data.mapToColorMap
-import com.neogineer.splendor.api.rules.isValid
+import com.github.achrafamil.splendor.api.data.Transaction
+import com.github.achrafamil.splendor.api.data.mapToColorMap
+import com.github.achrafamil.splendor.api.rules.isValid
 import org.junit.Assert
 import org.junit.Test
 

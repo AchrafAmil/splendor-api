@@ -1,6 +1,6 @@
-package com.neogineer.splendor.api.utils
+package com.github.achrafamil.splendor.api.utils
 
-import com.neogineer.splendor.api.data.Color
+import com.github.achrafamil.splendor.api.data.Color
 
 fun <T> MutableSet<T>.draw(count: Int): Set<T> {
     synchronized(this) {

@@ -1,23 +1,29 @@
-package com.neogineer.splendor.api
+package com.github.achrafamil.splendor.api
 
-import com.neogineer.splendor.api.data.Board
-import com.neogineer.splendor.api.data.BoardState
-import com.neogineer.splendor.api.data.Card
-import com.neogineer.splendor.api.data.CardCategory
-import com.neogineer.splendor.api.data.NameAlreadyTakenException
-import com.neogineer.splendor.api.data.Noble
-import com.neogineer.splendor.api.data.PlayerState
-import com.neogineer.splendor.api.data.ResourceLoader
-import com.neogineer.splendor.api.data.TooManyTurnsException
-import com.neogineer.splendor.api.data.mapToAllColors
-import com.neogineer.splendor.api.data.mapToColorMap
-import com.neogineer.splendor.api.rules.canAffordNoble
-import com.neogineer.splendor.api.rules.commit
-import com.neogineer.splendor.api.utils.Logger
-import com.neogineer.splendor.api.utils.PrintLogger
-import com.neogineer.splendor.api.utils.draw
+import com.github.achrafamil.splendor.api.data.Board
+import com.github.achrafamil.splendor.api.data.BoardState
+import com.github.achrafamil.splendor.api.data.Card
+import com.github.achrafamil.splendor.api.data.CardCategory
+import com.github.achrafamil.splendor.api.data.NameAlreadyTakenException
+import com.github.achrafamil.splendor.api.data.Noble
+import com.github.achrafamil.splendor.api.data.PlayerState
+import com.github.achrafamil.splendor.api.data.ResourceLoader
+import com.github.achrafamil.splendor.api.data.TooManyTurnsException
+import com.github.achrafamil.splendor.api.data.mapToAllColors
+import com.github.achrafamil.splendor.api.data.mapToColorMap
+import com.github.achrafamil.splendor.api.rules.canAffordNoble
+import com.github.achrafamil.splendor.api.rules.commit
+import com.github.achrafamil.splendor.api.utils.Logger
+import com.github.achrafamil.splendor.api.utils.PrintLogger
+import com.github.achrafamil.splendor.api.utils.draw
 import kotlin.math.min
 
+/**
+ * Main class to play a game.
+ * 1 - create an instance of GameMaster;
+ * 2 - register your own implementation (or one of the ready-to-use implementations at .api.players.*);
+ * 3 - call start method with a callback. Its methods will be triggered as game progresses.
+ */
 class GameMaster {
 
     val turnsCountLimit = 1000
@@ -34,6 +40,9 @@ class GameMaster {
             .filter { it.points >= WINNING_POINTS_THRESHOLD }
             .maxBy { it.points }
 
+    /**
+     * register your own implementation (or one of the ready-to-use implementations at .api.players.*)
+     */
     fun registerPlayer(player: Player) {
         logger.i(LOG_TAG, "registering player: ${player.name}")
         when {
@@ -54,6 +63,12 @@ class GameMaster {
         }
     }
 
+    /**
+     * start the game.
+     * Keep in mind this call is sync and method will not return until game ends.
+     * Callback (if any) methods will be triggered as game progresses.
+     * Make sure your register at least 2 and up to 4 players before calling start.
+     */
     fun start(gameCallback: GameCallback = GameCallbackAdapter()) {
         logger.i(LOG_TAG, "starting game")
         makeSureInitialStateIsLegal()

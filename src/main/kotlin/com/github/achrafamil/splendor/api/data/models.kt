@@ -1,4 +1,4 @@
-package com.neogineer.splendor.api.data
+package com.github.achrafamil.splendor.api.data
 
 
 data class Card(
@@ -9,7 +9,10 @@ data class Card(
     val points: Int
 )
 
-data class Board(
+/**
+ * Mutable state of the board
+ */
+internal data class Board(
     val cards: Map<CardCategory, MutableSet<Card>>,
     val tokens: MutableMap<Color, Int>,
     val nobles: MutableSet<Noble>,
@@ -25,6 +28,9 @@ data class Noble(
     val points: Int
 )
 
+/**
+ * an immutable snapshot of [Board]
+ */
 data class BoardState(
     val cards: Map<CardCategory, Set<Card>>,
     val tokens: Map<Color, Int>,
@@ -32,6 +38,9 @@ data class BoardState(
     val gold: Int
 )
 
+/**
+ * State of a player, represents a single player's owned assets (cards, tokens etc.)
+ */
 data class PlayerState(
     val name: String,
     val tokens: Map<Color, Int>,
@@ -40,6 +49,8 @@ data class PlayerState(
     val nobles: Set<Noble>,
     val golds: Int
 ) {
+    /** points earned by the player so far, inferred from its stat
+     */
     val points
         get() = cards.sumBy { it.points }
             .plus(nobles.sumBy { it.points })
@@ -47,4 +58,12 @@ data class PlayerState(
 
 enum class Color { WHITE, BLUE, GREEN, RED, BLACK }
 
-enum class CardCategory { FIRST, SECOND, THIRD }
+/**
+ * Categories from most affordable to most expensive
+ * (from cards providing zero or one point to those providing four or five points)
+ */
+enum class CardCategory {
+    FIRST,
+    SECOND,
+    THIRD
+}

@@ -1,8 +1,8 @@
-package com.neogineer.splendor.api
+package com.github.achrafamil.splendor.api
 
-import com.neogineer.splendor.api.data.PlayerState
-import com.neogineer.splendor.api.players.BasicPlayer
-import com.neogineer.splendor.api.players.TurnSkippingPlayer
+import com.github.achrafamil.splendor.api.data.PlayerState
+import com.github.achrafamil.splendor.api.players.BasicPlayer
+import com.github.achrafamil.splendor.api.players.TurnSkippingPlayer
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.argumentCaptor
 import com.nhaarman.mockitokotlin2.mock
