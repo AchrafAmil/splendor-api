@@ -24,12 +24,9 @@ import kotlin.math.min
  * 2 - register your own implementation (or one of the ready-to-use implementations at .api.players.*);
  * 3 - call start method with a callback. Its methods will be triggered as game progresses.
  */
-class GameMaster {
-
-    val turnsCountLimit = 1000
-
+class GameMaster(
     private val logger: Logger = PrintLogger()
-
+) {
     private val players = mutableMapOf<Player, PlayerState>()
 
     private lateinit var cardsPiles: Map<CardCategory, MutableSet<Card>>
@@ -81,14 +78,14 @@ class GameMaster {
             turnNumber++
         }
 
-        gameCallback.onGameFinished(winner!!, players.values.toList(), board.state)
         logger.i(LOG_TAG, "*******  WINNER IS : ${winner!!}")
+        gameCallback.onGameFinished(winner!!, players.values.toList(), board.state)
     }
 
     private fun onNewTurn(turnNumber: Int, gameCallback: GameCallback) {
         logger.v(LOG_TAG, "--- turn N°$turnNumber")
         gameCallback.onNewTurn(turnNumber)
-        if (turnNumber > turnsCountLimit) {
+        if (turnNumber > MAX_TURNS_COUNT) {
             throw TooManyTurnsException("Exceeded the maximum number of turns. Infinite game loop?")
         }
 
@@ -190,5 +187,6 @@ class GameMaster {
         private val LOG_TAG = GameMaster::class.java.simpleName
         private const val WINNING_POINTS_THRESHOLD = 15
         private const val MAX_VISIBLE_CARDS_PER_CATEGORY = 4
+        private const val MAX_TURNS_COUNT = 1000
     }
 }
