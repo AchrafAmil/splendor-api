@@ -21,7 +21,7 @@ import kotlin.random.Random
  *    Otherwise, I collect the 3 most-needed important tokens"
  *
  */
-open class BasicPlayer(playerName: String) : Player("BasicPlayer $playerName") {
+open class BasicPlayer(playerName: String) : Player(playerName) {
     private val logger = PrintLogger()
 
     override fun playTurn(
@@ -33,6 +33,17 @@ open class BasicPlayer(playerName: String) : Player("BasicPlayer $playerName") {
             ?.let { cardId -> return Transaction.CardBuying(cardId) }
 
         return buildAnAccurateTokensExchangeTransaction(selfState, boardState)
+    }
+
+    protected open fun findTheBestAffordableCard(selfState: PlayerState, boardState: BoardState): Int? {
+        return boardState
+            .cards
+            .values
+            .flatten()
+            .sortedByDescending { it.points }
+            .firstOrNull { card ->
+                boardState.playerCanSubmitTransaction(selfState, Transaction.CardBuying(card.id))
+            }?.id
     }
 
     private fun buildAnAccurateTokensExchangeTransaction(
@@ -77,7 +88,7 @@ open class BasicPlayer(playerName: String) : Player("BasicPlayer $playerName") {
         return interestInColors
     }
 
-    protected open fun tokensFromInterestMap(
+    protected fun tokensFromInterestMap(
         interestInColors: MutableMap<Color, Double>,
         boardState: BoardState,
         selfState: PlayerState
@@ -112,17 +123,6 @@ open class BasicPlayer(playerName: String) : Player("BasicPlayer $playerName") {
         logger.v(name, "colors to remove $colorsToRemove")
 
         return mapOfColorsToTake.mergeWith(colorsToRemove)
-    }
-
-    protected open fun findTheBestAffordableCard(selfState: PlayerState, boardState: BoardState): Int? {
-        return boardState
-            .cards
-            .values
-            .flatten()
-            .sortedByDescending { it.points }
-            .firstOrNull { card ->
-                boardState.playerCanSubmitTransaction(selfState, Transaction.CardBuying(card.id))
-            }?.id
     }
 
     override fun chooseNoble(
