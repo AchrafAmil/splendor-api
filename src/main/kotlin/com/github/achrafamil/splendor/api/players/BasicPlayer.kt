@@ -8,6 +8,8 @@ import com.github.achrafamil.splendor.api.data.PlayerState
 import com.github.achrafamil.splendor.api.data.Transaction
 import com.github.achrafamil.splendor.api.rules.TOKENS_LIMIT_BY_PLAYER
 import com.github.achrafamil.splendor.api.rules.playerCanSubmitTransaction
+import com.github.achrafamil.splendor.api.utils.PrintLogger
+import com.github.achrafamil.splendor.api.utils.mergeWith
 import kotlin.math.max
 import kotlin.random.Random
 
@@ -19,7 +21,8 @@ import kotlin.random.Random
  *    Otherwise, I collect the 3 most-needed important tokens"
  *
  */
-class BasicPlayer(playerName: String) : Player("BasicPlayer $playerName") {
+open class BasicPlayer(playerName: String) : Player("BasicPlayer $playerName") {
+    private val logger = PrintLogger()
 
     override fun playTurn(
         opponentsStates: List<PlayerState>,
@@ -36,7 +39,19 @@ class BasicPlayer(playerName: String) : Player("BasicPlayer $playerName") {
         selfState: PlayerState,
         boardState: BoardState
     ): Transaction.TokensExchange {
-        val interestInColors = mutableMapOf<Color, Double>()
+        val interestInColors = estimateInterestInColors(boardState, selfState)
+        logger.v(name, "interest in colors: $interestInColors")
+
+        val tokens = tokensFromInterestMap(interestInColors, boardState, selfState)
+
+        return Transaction.TokensExchange(tokens)
+    }
+
+    protected open fun estimateInterestInColors(
+        boardState: BoardState,
+        selfState: PlayerState
+    ): MutableMap<Color, Double> {
+        val interestInColors = mutableMapOf<Color, Double>().withDefault { Random.nextDouble(0.01, 0.1) }
 
         boardState.cards.values.flatten().forEach { card ->
             val costGap: Map<Color, Int> = card
@@ -51,7 +66,7 @@ class BasicPlayer(playerName: String) : Player("BasicPlayer $playerName") {
             costGap
                 .mapValues { (_, gap) -> 1.0 / gap } // the smaller the gap the higher the interest is
                 .forEach { (color, interest) ->
-                    interestInColors[color] = interestInColors.getOrDefault(color, 0.0) + interest
+                    interestInColors[color] = interestInColors.getValue(color) + interest
                 }
         }
 
@@ -59,7 +74,14 @@ class BasicPlayer(playerName: String) : Player("BasicPlayer $playerName") {
             // add an insignificant amount of interest just to avoid having "zero-interest"
             interestInColors[color] = interestInColors.getOrDefault(color, 0.0) + Random.nextDouble(0.01, 0.1)
         }
+        return interestInColors
+    }
 
+    protected open fun tokensFromInterestMap(
+        interestInColors: MutableMap<Color, Double>,
+        boardState: BoardState,
+        selfState: PlayerState
+    ): Map<Color, Int> {
         val interestConsideringBoardConstraint = interestInColors
             .filterKeys { color -> boardState.tokens[color] ?: 0 > 0 }
 
@@ -78,19 +100,21 @@ class BasicPlayer(playerName: String) : Player("BasicPlayer $playerName") {
         val mapOfColorsToTake = colorsToTake
             .plus(additionalColorsToReachThreeColor)
             .map { color -> color to 1 }.toMap()
+        logger.v(name, "colors to take: $mapOfColorsToTake")
 
-        val colorsToRemove = interestConsideringBoardConstraint
+        val colorsToRemove = interestInColors
             .toList()
             .sortedBy { (_, interest) -> interest }
-            .filter { (color, _) -> selfState.tokens.getOrDefault(color, 0) > 0 }
+            .filter { (color, _) -> selfState.tokens.getOrDefault(color, mapOfColorsToTake.getOrDefault(color, 0)) > 0 }
             .take(max(0, selfState.tokens.values.sum() + mapOfColorsToTake.size - TOKENS_LIMIT_BY_PLAYER))
             .map { it.first }
             .map { color -> color to -1 }.toMap()
+        logger.v(name, "colors to remove $colorsToRemove")
 
-        return Transaction.TokensExchange(mapOfColorsToTake + colorsToRemove)
+        return mapOfColorsToTake.mergeWith(colorsToRemove)
     }
 
-    private fun findTheBestAffordableCard(selfState: PlayerState, boardState: BoardState): Int? {
+    protected open fun findTheBestAffordableCard(selfState: PlayerState, boardState: BoardState): Int? {
         return boardState
             .cards
             .values
