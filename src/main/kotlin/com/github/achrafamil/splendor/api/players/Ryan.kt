@@ -8,6 +8,7 @@ import kotlin.random.Random
 /**
  * Ryan is a basic player, but with less intelligence: Rayan will make random choices.
  *
+ * On average, when playing against [BasicPlayer] Ryan has a chance of winning equal to 45%
  */
 
 class Ryan(name: String = "") : BasicPlayer("Ryan $name") {
