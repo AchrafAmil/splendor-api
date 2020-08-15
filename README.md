@@ -27,7 +27,7 @@ repositories {
 ```
 dependencies {
     ...
-    implementation "com.github.achrafamil:splendor-api:1.0.0"
+    implementation "com.github.achrafamil:splendor-api:1.0.1"
 }
 ```
 
@@ -87,3 +87,36 @@ So make sure your transaction does respect the rules by calling :
 ```
 boardState.playerCanSubmitTransaction(selfState, myTransaction)
 ```
+
+## Ready-to-use AI players
+Some ready to use implementations of `Player` interface are provided inside `.players` subpackage.
+
+Following are their respective strategies in a nutshell :
+
+- *Joe*: I buy the best card I can afford, otherwise I collect the _3 most-needed_ important tokens.
+- *Eve*: Will always try to _prevent opponent_ from getting their most interesting cards.
+- *Ryan*: Makes _random choices_ when it comes to choosing which tokens to collect.
+- *Johanna*: Like Joe but Johanna interest in cards is also _influenced by nobles_ in the game.
+
+When played together in one-vs-one games, players on the left column have following chances of winning :
+
+|         | Joe | Eve | Ryan | Johanna |
+|---------|-----|-----|------|---------|
+| Joe     | 50% | 55% | 55%  | 36%     |
+| Eve     | 45% | 50% | 58%  | 43%     |
+| Ryan    | 45% | 42% | 50%  | 34%     |
+| Johanna | 64% | 57% | 66%  | 50%     |
+
+Yes, Johanna rocks and taking nobles in consideration does in some circumstances considerably improve chances of winning. Now scientifically proven :-)
+
+## Legal stuff
+#### Disclaimer
+This is an open source project for and by independent board game players community.
+
+Even though the rules implemented here are quite similar to those of the official game, this project is not in any way related to the official Splendor board game company and does not copy any of its code or intellectual property.
+
+ #### Contributions
+ Contributions are more than welcome. Feel free to open issues for bugs or feature-requests. Fork and pull-request at will.
+ 
+ #### License
+ Splendor-API is released under the MIT license. [See LICENSE](LICENSE) for details.
