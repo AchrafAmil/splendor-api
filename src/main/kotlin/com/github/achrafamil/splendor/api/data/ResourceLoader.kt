@@ -12,7 +12,7 @@ internal class ResourceLoader {
                 val cardParts = cardTextLine.split(',').map { it.trim() }
                 Card(
                     id = cardParts[0].toInt(),
-                    cost = mapToColorMap(
+                    cost = colorMap(
                         white = cardParts[1].toInt(),
                         blue = cardParts[2].toInt(),
                         green = cardParts[3].toInt(),
@@ -38,7 +38,7 @@ internal class ResourceLoader {
                 val nobleParts = nobleTextLine.split(',').map { it.trim() }
                 Noble(
                     id = nobleParts[0].toInt(),
-                    cost = mapToColorMap(
+                    cost = colorMap(
                         white = nobleParts[1].toInt(),
                         blue = nobleParts[2].toInt(),
                         green = nobleParts[3].toInt(),

@@ -10,28 +10,28 @@ import com.nhaarman.mockitokotlin2.verify
 import org.junit.Assert
 import org.junit.Test
 
-class GameMasterTest {
+class GameTest {
 
     @Test(expected = IllegalStateException::class)
     fun `start the game with only one player should not work`() {
-        val gameMaster = GameMaster()
+        val game = Game()
 
-        gameMaster.registerPlayer(TurnSkippingPlayer("Player 1"))
-        gameMaster.start()
+        game.registerPlayer(TurnSkippingPlayer("Player 1"))
+        game.start()
     }
 
     @Test
     fun `Turn-skipping players should never win`() {
-        val gameMaster = GameMaster()
+        val game = Game()
         val expectedWinner = BasicPlayer("Player 3")
         val gameCallbackMock = mock<GameCallback>()
         val winnerCaptor = argumentCaptor<PlayerState>()
 
-        gameMaster.registerPlayer(TurnSkippingPlayer("Player 1"))
-        gameMaster.registerPlayer(TurnSkippingPlayer("Player 2"))
-        gameMaster.registerPlayer(expectedWinner)
-        gameMaster.registerPlayer(TurnSkippingPlayer("Player 4"))
-        gameMaster.start(gameCallbackMock)
+        game.registerPlayer(TurnSkippingPlayer("Player 1"))
+        game.registerPlayer(TurnSkippingPlayer("Player 2"))
+        game.registerPlayer(expectedWinner)
+        game.registerPlayer(TurnSkippingPlayer("Player 4"))
+        game.start(gameCallbackMock)
 
         verify(gameCallbackMock).onGameFinished(winnerCaptor.capture(), any(), any())
         Assert.assertEquals(expectedWinner.name, winnerCaptor.firstValue.name)

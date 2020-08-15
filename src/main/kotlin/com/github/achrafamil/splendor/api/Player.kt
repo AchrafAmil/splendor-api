@@ -9,7 +9,12 @@ import com.github.achrafamil.splendor.api.data.Transaction
 /**
  * Where playing strategies should be implemented.
  */
-abstract class Player(open val name: String) {
+interface Player {
+
+    /**
+     * Used as an id and should be unique in a game.
+     */
+    val name: String
 
     /**
      * Will be called exactly once on each turn to ask for a decision.

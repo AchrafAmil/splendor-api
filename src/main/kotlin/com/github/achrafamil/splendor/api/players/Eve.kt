@@ -5,43 +5,49 @@ import com.github.achrafamil.splendor.api.data.Color
 import com.github.achrafamil.splendor.api.data.PlayerState
 import com.github.achrafamil.splendor.api.data.Transaction
 import com.github.achrafamil.splendor.api.rules.playerCanSubmitTransaction
-import com.github.achrafamil.splendor.api.utils.PrintLogger
 import kotlin.math.max
 import kotlin.random.Random
 
 /**
- * Johanna is a basic player but with some enhancements:
+ * Eve is a basic player but with a bit of rivalry:
+ * Eve will always try to prevent their opponent from getting their most interesting cards
  *
- * Johanna interest in cards is also influenced by nobles in the game.
- * Johanna will favor cards that help reach a noble.
- *
- * On average, when playing against [BasicPlayer] Johanna has a chance of winning equal to 64%
+ * On average, when playing against [BasicPlayer] Eve has a chance of winning equal to 45%
  */
-class Johanna(name: String = "") : BasicPlayer("Johanna $name") {
-    private val logger = PrintLogger()
 
-    override fun findTheBestAffordableCard(selfState: PlayerState, boardState: BoardState) =
+class Eve(name: String = "") : BasicPlayer("Eve $name") {
+
+    private lateinit var opponent: PlayerState
+
+    override fun playTurn(
+        opponentsStates: List<PlayerState>,
+        selfState: PlayerState,
+        boardState: BoardState
+    ): Transaction {
+        opponent = opponentsStates.first()
         nobleDrivenBestAffordableCard(selfState, boardState)
+            ?.let { cardId -> return Transaction.CardBuying(cardId) }
+
+        return super.playTurn(opponentsStates, selfState, boardState)
+    }
 
     private fun nobleDrivenBestAffordableCard(selfState: PlayerState, boardState: BoardState): Int? {
-        val interestInCardColors = computeNobleDrivenInterestInCardColors(selfState, boardState)
+        val interestInCardColors = computeNobleDrivenInterestInCardColors(opponent, boardState)
 
         return boardState
             .cards
             .values
             .flatten()
-            .sortedByDescending { it.points + interestInCardColors.getOrDefault(it.color, .0) * INTEREST_COEFFICIENT }
+            .sortedByDescending { it.points + interestInCardColors.getOrDefault(it.color, .0) }
             .firstOrNull { card ->
                 boardState.playerCanSubmitTransaction(selfState, Transaction.CardBuying(card.id))
             }?.id
     }
 
-    private fun computeNobleDrivenInterestInCardColors(
+    protected fun computeNobleDrivenInterestInCardColors(
         selfState: PlayerState,
         boardState: BoardState
     ): Map<Color, Double> {
-        logger.v(name, "setting up noble goal")
-
         val interestInCardColors = mutableMapOf<Color, Double>().withDefault { Random.nextDouble(0.01, 0.1) }
 
         // go throw each noble and increment interest in its needed cards colors
@@ -60,11 +66,10 @@ class Johanna(name: String = "") : BasicPlayer("Johanna $name") {
                     interestInCardColors[color] = interestInCardColors.getValue(color) + interest
                 }
         }
-        logger.v(name, "interest in card colors: $interestInCardColors")
         return interestInCardColors
     }
 
-    companion object {
-        private const val INTEREST_COEFFICIENT = 1f
+    override fun estimateInterestInColors(boardState: BoardState, selfState: PlayerState): Map<Color, Double> {
+        return super.estimateInterestInColors(boardState, opponent)
     }
 }

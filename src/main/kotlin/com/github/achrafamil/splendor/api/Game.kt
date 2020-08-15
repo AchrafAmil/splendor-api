@@ -9,8 +9,8 @@ import com.github.achrafamil.splendor.api.data.Noble
 import com.github.achrafamil.splendor.api.data.PlayerState
 import com.github.achrafamil.splendor.api.data.ResourceLoader
 import com.github.achrafamil.splendor.api.data.TooManyTurnsException
+import com.github.achrafamil.splendor.api.data.colorMap
 import com.github.achrafamil.splendor.api.data.mapToAllColors
-import com.github.achrafamil.splendor.api.data.mapToColorMap
 import com.github.achrafamil.splendor.api.rules.canAffordNoble
 import com.github.achrafamil.splendor.api.rules.commit
 import com.github.achrafamil.splendor.api.utils.Logger
@@ -20,11 +20,11 @@ import kotlin.math.min
 
 /**
  * Main class to play a game.
- * 1 - create an instance of GameMaster;
+ * 1 - create an instance of Game;
  * 2 - register your own implementation (or one of the ready-to-use implementations at .api.players.*);
  * 3 - call start method with a callback. Its methods will be triggered as game progresses.
  */
-class GameMaster(
+class Game(
     private val logger: Logger = PrintLogger()
 ) {
     private val players = mutableMapOf<Player, PlayerState>()
@@ -50,7 +50,7 @@ class GameMaster(
             else -> {
                 players[player] = PlayerState(
                     name = player.name,
-                    tokens = mapToColorMap(),
+                    tokens = colorMap(),
                     cards = emptySet(),
                     reservedCards = emptySet(),
                     nobles = emptySet(),
@@ -184,7 +184,7 @@ class GameMaster(
     }
 
     companion object {
-        private val LOG_TAG = GameMaster::class.java.simpleName
+        private val LOG_TAG = Game::class.java.simpleName
         private const val WINNING_POINTS_THRESHOLD = 15
         private const val MAX_VISIBLE_CARDS_PER_CATEGORY = 4
         private const val MAX_TURNS_COUNT = 1000

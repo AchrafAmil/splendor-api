@@ -21,7 +21,8 @@ import kotlin.random.Random
  *    Otherwise, I collect the 3 most-needed important tokens"
  *
  */
-open class BasicPlayer(playerName: String) : Player(playerName) {
+open class BasicPlayer(playerName: String) : Player {
+    override val name: String = playerName
     private val logger = PrintLogger()
 
     override fun playTurn(

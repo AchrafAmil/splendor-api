@@ -15,7 +15,8 @@ fun aPlayerWhoDoesOnlyOnce(
         boardState: BoardState
     ) -> Transaction
 ): Player {
-    return object : Player(name) {
+    return object : Player {
+        override val name: String = name
         var firstTurn = true
         override fun playTurn(
             opponentsStates: List<PlayerState>,

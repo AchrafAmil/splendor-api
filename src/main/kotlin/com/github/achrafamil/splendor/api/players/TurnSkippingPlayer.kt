@@ -6,7 +6,8 @@ import com.github.achrafamil.splendor.api.data.Noble
 import com.github.achrafamil.splendor.api.data.PlayerState
 import com.github.achrafamil.splendor.api.data.Transaction
 
-class TurnSkippingPlayer(dummyPlayerName: String) : Player("TurnSkippingPlayer named $dummyPlayerName") {
+class TurnSkippingPlayer(dummyPlayerName: String) : Player {
+    override val name: String = "TurnSkippingPlayer named $dummyPlayerName"
 
     override fun playTurn(
         opponentsStates: List<PlayerState>,

@@ -1,7 +1,7 @@
 package com.github.achrafamil.splendor.api
 
 import com.github.achrafamil.splendor.api.data.Transaction
-import com.github.achrafamil.splendor.api.data.mapToColorMap
+import com.github.achrafamil.splendor.api.data.colorMap
 import com.github.achrafamil.splendor.api.rules.isValid
 import org.junit.Assert
 import org.junit.Test
@@ -24,21 +24,21 @@ class TransactionValidationTest {
 
     companion object {
         internal val validTokensExchangeTransactions = listOf(
-            Transaction.TokensExchange(mapToColorMap(green = 1)),
-            Transaction.TokensExchange(mapToColorMap(white = 2)),
-            Transaction.TokensExchange(mapToColorMap(white = 1, green = 1, black = 1)),
-            Transaction.TokensExchange(mapToColorMap(white = 1, green = 1, black = 1, blue = -1, red = -1)),
-            Transaction.TokensExchange(mapToColorMap(white = 1, green = 1, black = 1, blue = -2)),
-            Transaction.TokensExchange(mapToColorMap(blue = 1, red = 1)),
-            Transaction.TokensExchange(mapToColorMap())
+            Transaction.TokensExchange(colorMap(green = 1)),
+            Transaction.TokensExchange(colorMap(white = 2)),
+            Transaction.TokensExchange(colorMap(white = 1, green = 1, black = 1)),
+            Transaction.TokensExchange(colorMap(white = 1, green = 1, black = 1, blue = -1, red = -1)),
+            Transaction.TokensExchange(colorMap(white = 1, green = 1, black = 1, blue = -2)),
+            Transaction.TokensExchange(colorMap(blue = 1, red = 1)),
+            Transaction.TokensExchange(colorMap())
         )
 
         internal val invalidTokensExchangeTransactions = listOf(
-            Transaction.TokensExchange(mapToColorMap(green = 3)),
-            Transaction.TokensExchange(mapToColorMap(white = 2, green = 2, black = 2, blue = 2)),
-            Transaction.TokensExchange(mapToColorMap(white = 2, green = 2, black = 2, blue = 2, red = -8)),
-            Transaction.TokensExchange(mapToColorMap(white = 1, green = 1, black = 1, blue = 1, red = -1)),
-            Transaction.TokensExchange(mapToColorMap(blue = 2, red = 2))
+            Transaction.TokensExchange(colorMap(green = 3)),
+            Transaction.TokensExchange(colorMap(white = 2, green = 2, black = 2, blue = 2)),
+            Transaction.TokensExchange(colorMap(white = 2, green = 2, black = 2, blue = 2, red = -8)),
+            Transaction.TokensExchange(colorMap(white = 1, green = 1, black = 1, blue = 1, red = -1)),
+            Transaction.TokensExchange(colorMap(blue = 2, red = 2))
         )
     }
 }
