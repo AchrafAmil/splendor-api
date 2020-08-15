@@ -5,7 +5,7 @@ import com.github.achrafamil.splendor.api.data.BoardState
 import com.github.achrafamil.splendor.api.data.Noble
 import com.github.achrafamil.splendor.api.data.PlayerState
 import com.github.achrafamil.splendor.api.data.Transaction
-import com.github.achrafamil.splendor.api.data.mapToColorMap
+import com.github.achrafamil.splendor.api.data.colorMap
 
 /**
  * Keep in mind this player will, after few turns, make the game throw IllegalTransactionException.
@@ -30,6 +30,6 @@ class TokenCollectorPlayer(dummyPlayerName: String) : Player {
     ) = affordableNobles.first()
 
     companion object {
-        val TOKENS_TO_COLLECT = mapToColorMap(blue = 1, white = 1, red = 1)
+        val TOKENS_TO_COLLECT = colorMap(blue = 1, white = 1, red = 1)
     }
 }

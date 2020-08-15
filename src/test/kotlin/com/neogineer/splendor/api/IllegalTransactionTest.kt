@@ -3,7 +3,7 @@ package com.github.achrafamil.splendor.api
 import com.github.achrafamil.splendor.api.data.CardCategory
 import com.github.achrafamil.splendor.api.data.IllegalTransactionException
 import com.github.achrafamil.splendor.api.data.Transaction
-import com.github.achrafamil.splendor.api.data.mapToColorMap
+import com.github.achrafamil.splendor.api.data.colorMap
 import com.github.achrafamil.splendor.api.players.TokenCollectorPlayer
 import com.github.achrafamil.splendor.api.players.TurnSkippingPlayer
 import com.github.achrafamil.splendor.api.players.aPlayerWhoDoesOnlyOnce
@@ -26,7 +26,7 @@ class IllegalTransactionTest {
         val game = Game()
 
         val player = aPlayerWhoDoesOnlyOnce { _, _, _ ->
-            Transaction.TokensExchange(mapToColorMap(1, 1, 1, 1))
+            Transaction.TokensExchange(colorMap(1, 1, 1, 1))
         }
 
         game.registerPlayer(player)

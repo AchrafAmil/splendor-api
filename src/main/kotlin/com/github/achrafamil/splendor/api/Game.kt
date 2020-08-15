@@ -9,8 +9,8 @@ import com.github.achrafamil.splendor.api.data.Noble
 import com.github.achrafamil.splendor.api.data.PlayerState
 import com.github.achrafamil.splendor.api.data.ResourceLoader
 import com.github.achrafamil.splendor.api.data.TooManyTurnsException
+import com.github.achrafamil.splendor.api.data.colorMap
 import com.github.achrafamil.splendor.api.data.mapToAllColors
-import com.github.achrafamil.splendor.api.data.mapToColorMap
 import com.github.achrafamil.splendor.api.rules.canAffordNoble
 import com.github.achrafamil.splendor.api.rules.commit
 import com.github.achrafamil.splendor.api.utils.Logger
@@ -50,7 +50,7 @@ class Game(
             else -> {
                 players[player] = PlayerState(
                     name = player.name,
-                    tokens = mapToColorMap(),
+                    tokens = colorMap(),
                     cards = emptySet(),
                     reservedCards = emptySet(),
                     nobles = emptySet(),
