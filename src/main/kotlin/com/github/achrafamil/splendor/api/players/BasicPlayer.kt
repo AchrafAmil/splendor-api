@@ -61,7 +61,7 @@ open class BasicPlayer(playerName: String) : Player(playerName) {
     protected open fun estimateInterestInColors(
         boardState: BoardState,
         selfState: PlayerState
-    ): MutableMap<Color, Double> {
+    ): Map<Color, Double> {
         val interestInColors = mutableMapOf<Color, Double>().withDefault { Random.nextDouble(0.01, 0.1) }
 
         boardState.cards.values.flatten().forEach { card ->
@@ -89,7 +89,7 @@ open class BasicPlayer(playerName: String) : Player(playerName) {
     }
 
     protected fun tokensFromInterestMap(
-        interestInColors: MutableMap<Color, Double>,
+        interestInColors: Map<Color, Double>,
         boardState: BoardState,
         selfState: PlayerState
     ): Map<Color, Int> {
