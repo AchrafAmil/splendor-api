@@ -10,7 +10,8 @@ import com.github.achrafamil.splendor.api.data.mapToColorMap
 /**
  * Keep in mind this player will, after few turns, make the game throw IllegalTransactionException.
  */
-class TokenCollectorPlayer(dummyPlayerName: String) : Player("TokenCollectorPlayer named $dummyPlayerName") {
+class TokenCollectorPlayer(dummyPlayerName: String) : Player {
+    override val name: String = "TokenCollectorPlayer named $dummyPlayerName"
 
     override fun playTurn(
         opponentsStates: List<PlayerState>,
