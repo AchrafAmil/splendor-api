@@ -60,17 +60,17 @@ class InitialStateTest {
     }
 
     private fun getInitialState(playersCount: Int): BoardState {
-        val gameMaster = GameMaster()
+        val game = Game()
         val boardStateCaptor = ArgumentCaptor.forClass(BoardState::class.java)
         val player: Player = mock()
         whenever(player.name).thenReturn("player1")
         whenever(player.playTurn(any(), any(), any())).thenReturn(Transaction.TokensExchange(mapToColorMap()))
-        gameMaster.registerPlayer(player)
-        gameMaster.registerPlayer(BasicPlayer("dummy player2"))
-        if (playersCount > 2) gameMaster.registerPlayer(TurnSkippingPlayer("dummy player3"))
-        if (playersCount > 3) gameMaster.registerPlayer(TurnSkippingPlayer("dummy player4"))
+        game.registerPlayer(player)
+        game.registerPlayer(BasicPlayer("dummy player2"))
+        if (playersCount > 2) game.registerPlayer(TurnSkippingPlayer("dummy player3"))
+        if (playersCount > 3) game.registerPlayer(TurnSkippingPlayer("dummy player4"))
 
-        gameMaster.start()
+        game.start()
         verify(player, atLeastOnce()).playTurn(any(), any(), boardState = capture<BoardState>(boardStateCaptor))
         return boardStateCaptor.firstValue
     }

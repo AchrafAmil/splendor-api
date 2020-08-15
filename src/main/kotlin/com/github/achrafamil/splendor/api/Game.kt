@@ -20,11 +20,11 @@ import kotlin.math.min
 
 /**
  * Main class to play a game.
- * 1 - create an instance of GameMaster;
+ * 1 - create an instance of Game;
  * 2 - register your own implementation (or one of the ready-to-use implementations at .api.players.*);
  * 3 - call start method with a callback. Its methods will be triggered as game progresses.
  */
-class GameMaster(
+class Game(
     private val logger: Logger = PrintLogger()
 ) {
     private val players = mutableMapOf<Player, PlayerState>()
@@ -184,7 +184,7 @@ class GameMaster(
     }
 
     companion object {
-        private val LOG_TAG = GameMaster::class.java.simpleName
+        private val LOG_TAG = Game::class.java.simpleName
         private const val WINNING_POINTS_THRESHOLD = 15
         private const val MAX_VISIBLE_CARDS_PER_CATEGORY = 4
         private const val MAX_TURNS_COUNT = 1000

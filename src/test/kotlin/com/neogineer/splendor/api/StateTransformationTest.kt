@@ -63,8 +63,8 @@ class StateTransformationTest {
      *
      */
     private fun getFullGameStates(players: List<Player>): List<Pair<BoardState, List<PlayerState>>> {
-        val gameMaster = GameMaster()
-        players.forEach { gameMaster.registerPlayer(it) }
+        val game = Game()
+        players.forEach { game.registerPlayer(it) }
         val boardStates = mutableListOf<Pair<BoardState, List<PlayerState>>>()
 
         val callback = object : GameCallbackAdapter() {
@@ -81,7 +81,7 @@ class StateTransformationTest {
         }
 
         try {
-            gameMaster.start(callback)
+            game.start(callback)
         } catch (ite: IllegalTransactionException) {
             // no-op: players are not smart to avoid IllegalTransactionException
         }
