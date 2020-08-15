@@ -1,9 +1,9 @@
 package com.github.achrafamil.splendor.api.data
 
 /**
- * utility method to get map of the 5 colors with zero as key of unspecified colors.
+ * utility method to get a map of the 5 colors with zero as value of unspecified colors.
  */
-fun mapToColorMap(
+fun colorMap(
     white: Int = 0,
     blue: Int = 0,
     green: Int = 0,
@@ -23,7 +23,7 @@ fun mapToColorMap(
 /**
  * utility method to create a map of colors with [color] as value for each of the 5 colors
  */
-fun mapToAllColors(color: Int) = mapToColorMap(color, color, color, color, color)
+fun mapToAllColors(color: Int) = colorMap(color, color, color, color, color)
 
 internal fun mapToCardCategory(categoryCode: Int): CardCategory {
     return when (categoryCode) {

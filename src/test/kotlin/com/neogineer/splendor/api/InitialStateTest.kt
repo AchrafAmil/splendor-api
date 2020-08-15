@@ -4,7 +4,7 @@ import com.github.achrafamil.splendor.api.data.BoardState
 import com.github.achrafamil.splendor.api.data.CardCategory
 import com.github.achrafamil.splendor.api.data.Color
 import com.github.achrafamil.splendor.api.data.Transaction
-import com.github.achrafamil.splendor.api.data.mapToColorMap
+import com.github.achrafamil.splendor.api.data.colorMap
 import com.github.achrafamil.splendor.api.players.BasicPlayer
 import com.github.achrafamil.splendor.api.players.TurnSkippingPlayer
 import com.nhaarman.mockitokotlin2.any
@@ -60,17 +60,17 @@ class InitialStateTest {
     }
 
     private fun getInitialState(playersCount: Int): BoardState {
-        val gameMaster = GameMaster()
+        val game = Game()
         val boardStateCaptor = ArgumentCaptor.forClass(BoardState::class.java)
         val player: Player = mock()
         whenever(player.name).thenReturn("player1")
-        whenever(player.playTurn(any(), any(), any())).thenReturn(Transaction.TokensExchange(mapToColorMap()))
-        gameMaster.registerPlayer(player)
-        gameMaster.registerPlayer(BasicPlayer("dummy player2"))
-        if (playersCount > 2) gameMaster.registerPlayer(TurnSkippingPlayer("dummy player3"))
-        if (playersCount > 3) gameMaster.registerPlayer(TurnSkippingPlayer("dummy player4"))
+        whenever(player.playTurn(any(), any(), any())).thenReturn(Transaction.TokensExchange(colorMap()))
+        game.registerPlayer(player)
+        game.registerPlayer(BasicPlayer("dummy player2"))
+        if (playersCount > 2) game.registerPlayer(TurnSkippingPlayer("dummy player3"))
+        if (playersCount > 3) game.registerPlayer(TurnSkippingPlayer("dummy player4"))
 
-        gameMaster.start()
+        game.start()
         verify(player, atLeastOnce()).playTurn(any(), any(), boardState = capture<BoardState>(boardStateCaptor))
         return boardStateCaptor.firstValue
     }
