@@ -12,8 +12,8 @@ import kotlin.random.Random
 /**
  * Johanna is a basic player but with some enhancements:
  *
- * Her interest in cards is also influenced by nobles in the game.
- * She will favor cards that help reach a noble.
+ * Johanna interest in cards is also influenced by nobles in the game.
+ * Johanna will favor cards that help reach a noble.
  *
  * On average, when playing against [BasicPlayer] Johanna has a chance of winning equal to 64%
  */
