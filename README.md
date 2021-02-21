@@ -17,14 +17,14 @@ The library do respect the same conventional game rules, for more details please
 
 ## How-to
 First add dependency to your `build.gradle`.
-```
+```Groovy
 repositories {
     mavenCentral()
     ...
 }
 ```
 
-```
+```Groovy
 dependencies {
     ...
     implementation "com.github.achrafamil:splendor-api:1.0.1"
@@ -37,7 +37,7 @@ Define your own player or use one of the ready-to-use implementations defined in
 You can either build your player from scratch by implementing `Player` interface or you can just extend `BasicPlayer` and override desired behavior.
 
 `Player` interface requires two methods :
-```
+```kotlin
 
 class MyPlayer() : Player {
     // give it a unique name
@@ -48,7 +48,7 @@ class MyPlayer() : Player {
         selfState: PlayerState,
         boardState: BoardState
     ): Transaction {
-        TODO("decide what to do with your turn and return your decision = transaction")
+        TODO("decide what to do with your turn and return your decision i.e. a transaction")
     }
 
     override fun chooseNoble(
@@ -69,7 +69,7 @@ Your player will be asked each turn to decide for a `Transaction`.
 Negative values are allowed as far as they represent giving up some tokens.
 
     Valid `Transaction.TokensExchange` examples:
-```
+```kotlin
 TokensExchange(colorMap(white = 1, green = 1, black = 1) // as long as user has < 8 tokens
 TokensExchange(colorMap(white = 1, green = 1) // as long as user has < 9 tokens
 TokensExchange(colorMap(white = 2) // as long as user has < 9 tokens
@@ -84,7 +84,7 @@ All in all your transaction should respect the game rules, please refer to Splen
 If your player returns a transaction violating rules (eg. `TokensExchange` with 4 tokens or `CardBuying` without enough tokens...) the `Game` will throw an `IllegalTransactionException`.
 
 So make sure your transaction does respect the rules by calling :
-```
+```kotlin
 boardState.playerCanSubmitTransaction(selfState, myTransaction)
 ```
 
